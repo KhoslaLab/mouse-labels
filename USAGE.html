@@ -51,6 +51,25 @@
   <li><strong>Harvest Labels</strong> — For generating standard mouse sample labels by AS number range.</li>
   <li><strong>Manual Labels</strong> — For creating labels with arbitrary text on each line.</li>
 </ul>
+<p>Both pages include an <strong>Import from file</strong> bar for loading previously downloaded label files. You can drag and drop a <code>.txt</code> file onto either bar, or click to browse.</p>
+
+<hr>
+
+<h2>Importing a Label File</h2>
+<p>You can re-import any <code>.txt</code> file previously downloaded from this app to edit and reprint labels.</p>
+
+<h3>How to import</h3>
+<ol>
+  <li><strong>Drag and drop</strong> a <code>.txt</code> or <code>.zpl</code> file onto the import bar on either the Harvest Labels or Manual Labels page, <strong>or</strong> click the import bar (or the "Choose File…" button) to browse for a file.</li>
+  <li>The app will parse the ZPL in the file and automatically route it to the appropriate page.</li>
+</ol>
+
+<h3>Smart routing</h3>
+<ul>
+  <li><strong>Harvest Labels page</strong> — If the file contains labels where every Line 1 is an AS number (e.g., AS2243), the AS numbers form a contiguous range, and every mouse has the same set of sample labels, the file loads into the Harvest Labels page. The AS range, date, project name, and sample labels are all pre-filled. If the samples match the standard template, Standard mode is selected; otherwise, Custom mode is activated with the labels loaded as editable chips.</li>
+  <li><strong>Manual Labels page</strong> — If the file does not match a harvest pattern (e.g., it has mixed Line 1 values, non-contiguous AS numbers, or different sample sets per mouse), it loads into the Manual Labels page with each unique label as an editable row. Duplicate labels are grouped with their quantity.</li>
+</ul>
+<p>Once imported, you can change the AS range, date, project name, or individual labels before regenerating and reprinting.</p>
 
 <hr>
 
@@ -72,7 +91,7 @@
 <p>Choose one of two options:</p>
 
 <h4>Standard Harvest Template</h4>
-<p>Click <strong>Standard Harvest Template</strong> (selected by default). This uses the predefined set of 11 sample labels per mouse:</p>
+<p>Click <strong>Standard Harvest Template</strong> (selected by default). This uses the predefined set of 14 sample labels per mouse:</p>
 <table>
   <thead><tr><th>Label #</th><th>Sample Name</th></tr></thead>
   <tbody>
@@ -210,6 +229,7 @@
     <tr><td>Browser print dialog doesn't show the Zebra printer</td><td>The printer may not be installed. See Printer Setup above.</td></tr>
     <tr><td>Nothing prints</td><td>Check that the Zebra printer is powered on, connected, and has labels loaded.</td></tr>
     <tr><td>Labels are misaligned</td><td>Check that the correct label size is configured in the Zebra printer driver settings.</td></tr>
+    <tr><td>Imported file loads into the wrong page</td><td>The app auto-detects harvest patterns (contiguous AS numbers with identical samples per mouse). Files that don't match this pattern load into Manual Labels. You can always manually re-enter labels on either page.</td></tr>
   </tbody>
 </table>
 

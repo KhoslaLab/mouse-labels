@@ -9,9 +9,10 @@ This tool replaces a manual Excel-based workflow for printing mouse sample label
 ### Features
 
 - **Harvest Labels** — Generate a full set of sample labels for a range of mice using the standard harvest template, or custom sample names.
+- **Manual Labels** — Create arbitrary labels with any text on two lines plus a date, with adjustable quantity per label.
+- **Import & Edit** — Import a previously downloaded `.txt` label file to edit and reprint. Drag and drop or click to browse. Harvest-compatible files automatically load into the Harvest Labels page; all others open in Manual Labels.
 - **Custom Labels with Drag-and-Drop** — Reorder custom labels by dragging chips, and click any label name to edit it in place.
 - **Load Standard Template** — Pre-fill the custom label editor with standard harvest labels so you can make small modifications without starting from scratch.
-- **Manual Labels** — Create arbitrary labels with any text on two lines plus a date, with adjustable quantity per label.
 - **Project Name** — Optional project name included in downloaded filenames and optionally printed as a 4th line on every label.
 - **Date Toggle** — Include or exclude the date from labels with a single checkbox.
 - **Print or Download** — Print directly to a Zebra printer via the browser print dialog, or download a `.txt` file to print from Notepad.

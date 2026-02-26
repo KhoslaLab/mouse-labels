@@ -166,6 +166,26 @@
 
   .hidden { display: none !important; }
   #printFrame { display: none; }
+  #fileInput { display: none; }
+
+  .import-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    background: var(--surface-alt);
+    border: 2px dashed var(--border-strong);
+    border-radius: var(--radius);
+    margin-bottom: 16px;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .import-bar.drag-active {
+    border-color: var(--accent);
+    background: var(--accent-light);
+  }
+  .import-bar .import-icon { color: var(--text-muted); flex-shrink: 0; }
+  .import-bar .import-text { font-size: 13px; color: var(--text-muted); flex: 1; }
+  .import-bar .import-text strong { color: var(--text); }
 
   @media (max-width: 700px) {
     .form-row, .form-row.four-col { grid-template-columns: 1fr; }
@@ -179,6 +199,7 @@
 <body>
 
 <div id="printFrame"><pre id="printContent"></pre></div>
+<input type="file" id="fileInput" accept=".txt,.zpl" onchange="handleFileUpload(event)">
 
 <header class="app-header">
   <div class="top-row">
@@ -205,6 +226,16 @@
 <!-- PAGE 1: HARVEST LABELS                                        -->
 <!-- ============================================================ -->
 <div id="page-harvest" class="page active">
+
+  <div class="import-bar" id="harvestImportBar">
+    <div class="import-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+    </div>
+    <div class="import-text">
+      <strong>Import from file</strong> — Drop a .txt label file here, or click to browse. Harvest-compatible files load here; others open in Manual Labels.
+    </div>
+    <button class="btn btn-sm btn-outline" onclick="document.getElementById('fileInput').click()" style="flex-shrink:0">Choose File…</button>
+  </div>
 
   <div class="card">
     <div class="card-title"><span class="step">1</span> Mouse Range, Date, &amp; Project</div>
@@ -317,6 +348,17 @@
 
   <div class="card">
     <div class="card-title"><span class="step">1</span> Create Labels</div>
+
+    <div class="import-bar" id="manualImportBar">
+      <div class="import-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      </div>
+      <div class="import-text">
+        <strong>Import from file</strong> — Drop a .txt label file here, or click to browse. Harvest-compatible files open in Harvest Labels.
+      </div>
+      <button class="btn btn-sm btn-outline" onclick="document.getElementById('fileInput').click()" style="flex-shrink:0">Choose File…</button>
+    </div>
+
     <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px">
       Enter any text for Line 1 and Line 2 of each label. Date is shared across all labels. Set Qty to print multiples of the same label. Labels are grouped 3-across per physical label.
     </p>
@@ -813,6 +855,255 @@
 
   function showHarvestStatus(msg, type) { const b = document.getElementById('harvestStatus'); b.textContent = msg; b.className = `status-bar ${type}`; }
   function showManualStatus(msg, type) { const b = document.getElementById('manualStatus'); b.textContent = msg; b.className = `status-bar ${type}`; }
+
+  /* ======== File Import: drag-and-drop setup ======== */
+  function setupDropZone(barId) {
+    const bar = document.getElementById(barId);
+    bar.addEventListener('dragover', (e) => { e.preventDefault(); e.stopPropagation(); bar.classList.add('drag-active'); });
+    bar.addEventListener('dragleave', (e) => { e.preventDefault(); e.stopPropagation(); bar.classList.remove('drag-active'); });
+    bar.addEventListener('drop', (e) => {
+      e.preventDefault(); e.stopPropagation();
+      bar.classList.remove('drag-active');
+      const file = e.dataTransfer.files[0];
+      if (file) processImportFile(file);
+    });
+    // Also make the whole bar clickable (not just the button)
+    bar.addEventListener('click', (e) => {
+      if (e.target.tagName !== 'BUTTON') document.getElementById('fileInput').click();
+    });
+    bar.style.cursor = 'pointer';
+  }
+
+  setupDropZone('harvestImportBar');
+  setupDropZone('manualImportBar');
+
+  function handleFileUpload(event) {
+    const file = event.target.files[0];
+    if (file) processImportFile(file);
+    event.target.value = ''; // Reset so same file can be re-uploaded
+  }
+
+  function processImportFile(file) {
+    if (!file.name.match(/\.(txt|zpl)$/i)) {
+      showHarvestStatus('Please select a .txt or .zpl file.', 'error');
+      showManualStatus('Please select a .txt or .zpl file.', 'error');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const parsed = parseZPL(e.target.result);
+        if (parsed.entries.length === 0) {
+          showManualStatus('No labels found in the uploaded file.', 'error');
+          showPage('manual');
+          return;
+        }
+        const harvest = detectHarvestPattern(parsed);
+        if (harvest) {
+          populateHarvestFromImport(harvest, parsed);
+          showPage('harvest');
+          showHarvestStatus(`Imported ${parsed.entries.length} unique ${parsed.entries.length > 1 ? 'labels' : 'label'} from "${file.name}" — ${harvest.mouseCount} ${harvest.mouseCount > 1 ? 'mice' : 'mouse'}, ${harvest.sampleLabels.length} ${harvest.sampleLabels.length > 1 ? 'samples' : 'sample'} each.`, 'success');
+        } else {
+          populateManualFromImport(parsed);
+          showPage('manual');
+          showManualStatus(`Imported ${parsed.entries.length} unique ${parsed.entries.length > 1 ? 'labels' : 'label'} from "${file.name}" into Manual Labels.`, 'success');
+        }
+      } catch (err) {
+        showManualStatus('Could not parse the uploaded file. Make sure it is a ZPL label file.', 'error');
+        showPage('manual');
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  /**
+   * Parse ZPL text back into label entries.
+   * Returns { allLabels: [{line1, line2}], entries: [{line1, line2, qty}], date, project }
+   */
+  function parseZPL(text) {
+    const blockTexts = text.split('^XZ').filter(b => b.includes('^XA'));
+    let allLabels = [];
+    let dates = new Set();
+    let projects = new Set();
+
+    for (const block of blockTexts) {
+      const fieldRegex = /\^FO(\d+),(\d+)\^AD\^FD(.*?)(?=\^FS|$)/g;
+      let match;
+      const fields = {};
+      while ((match = fieldRegex.exec(block)) !== null) {
+        fields[`${match[1]},${match[2]}`] = match[3];
+      }
+      for (const xPos of X_POS) {
+        const line1 = fields[`${xPos},20`] || '';
+        const line2 = fields[`${xPos},50`] || '';
+        const date = fields[`${xPos},80`] || '';
+        const proj = fields[`${xPos},110`] || '';
+        if (date) dates.add(date);
+        if (proj) projects.add(proj);
+        // Include labels even if line2 is empty (blank label with AS number)
+        // but skip fully empty padding columns
+        if (!line1 && !line2) continue;
+        allLabels.push({ line1, line2 });
+      }
+    }
+
+    // Group identical entries for manual mode
+    const grouped = [];
+    const seen = new Map();
+    for (const lbl of allLabels) {
+      const key = `${lbl.line1}\0${lbl.line2}`;
+      if (seen.has(key)) { grouped[seen.get(key)].qty++; }
+      else { seen.set(key, grouped.length); grouped.push({ line1: lbl.line1, line2: lbl.line2, qty: 1 }); }
+    }
+
+    return {
+      allLabels,
+      entries: grouped,
+      date: dates.size > 0 ? [...dates][0] : '',
+      project: projects.size > 0 ? [...projects][0] : ''
+    };
+  }
+
+  /**
+   * Detect if parsed labels match a harvest pattern:
+   * - All line1 values are AS#### format
+   * - AS numbers form a contiguous range
+   * - Each mouse has the same ordered set of line2 (sample) values
+   *
+   * Returns { asStart, asEnd, mouseCount, sampleLabels: [...] } or null.
+   */
+  function detectHarvestPattern(parsed) {
+    const labels = parsed.allLabels;
+    if (labels.length === 0) return null;
+
+    // Check all line1 values are AS#### format
+    const asRegex = /^AS(\d+)$/;
+    for (const lbl of labels) {
+      if (!asRegex.test(lbl.line1)) return null;
+    }
+
+    // Group by mouse (preserving order within each mouse)
+    const mouseMap = new Map(); // AS number → [line2, line2, ...]
+    const mouseOrder = []; // Order of first appearance
+    for (const lbl of labels) {
+      const num = parseInt(lbl.line1.match(asRegex)[1]);
+      if (!mouseMap.has(num)) {
+        mouseMap.set(num, []);
+        mouseOrder.push(num);
+      }
+      mouseMap.get(num).push(lbl.line2);
+    }
+
+    if (mouseOrder.length === 0) return null;
+
+    // Check contiguous range
+    const sorted = [...mouseOrder].sort((a, b) => a - b);
+    const asStart = sorted[0];
+    const asEnd = sorted[sorted.length - 1];
+    if (asEnd - asStart + 1 !== sorted.length) return null;
+    for (let i = 0; i < sorted.length; i++) {
+      if (sorted[i] !== asStart + i) return null;
+    }
+
+    // Check all mice have the same sample labels in the same order
+    const firstSamples = mouseMap.get(sorted[0]);
+    for (let i = 1; i < sorted.length; i++) {
+      const samples = mouseMap.get(sorted[i]);
+      if (samples.length !== firstSamples.length) return null;
+      for (let j = 0; j < samples.length; j++) {
+        if (samples[j] !== firstSamples[j]) return null;
+      }
+    }
+
+    return {
+      asStart,
+      asEnd,
+      mouseCount: sorted.length,
+      sampleLabels: firstSamples
+    };
+  }
+
+  /**
+   * Populate the Harvest Labels page from a detected harvest pattern.
+   */
+  function populateHarvestFromImport(harvest, parsed) {
+    // Set AS range
+    document.getElementById('asStart').value = harvest.asStart;
+    document.getElementById('asEnd').value = harvest.asEnd;
+
+    // Set date
+    if (parsed.date) {
+      const dp = parsed.date.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+      if (dp) {
+        document.getElementById('labelDate').value = `${dp[3]}-${dp[1].padStart(2,'0')}-${dp[2].padStart(2,'0')}`;
+      }
+      document.getElementById('includeDateOnLabel').checked = true;
+    } else {
+      document.getElementById('includeDateOnLabel').checked = false;
+    }
+
+    // Set project
+    if (parsed.project) {
+      document.getElementById('projectName').value = parsed.project;
+      document.getElementById('printProjectOnLabel').checked = true;
+      updateCharCounter(document.getElementById('projectName'), 'projectNameCounter');
+    } else {
+      document.getElementById('projectName').value = '';
+      document.getElementById('printProjectOnLabel').checked = false;
+    }
+
+    // Determine if sample labels match the standard template
+    const samplesMatch = harvest.sampleLabels.length === STANDARD_LABELS.length &&
+      harvest.sampleLabels.every((s, i) => s === STANDARD_LABELS[i]);
+
+    if (samplesMatch) {
+      setMode('standard');
+    } else {
+      setMode('custom');
+      customLabels = [...harvest.sampleLabels];
+      renderChips();
+    }
+
+    // Clear previous preview
+    document.getElementById('harvestPreview').style.display = 'none';
+    document.getElementById('btnHarvestDownload').disabled = true;
+    document.getElementById('btnHarvestPrint').disabled = true;
+  }
+
+  /**
+   * Populate the Manual Labels page from parsed import data.
+   */
+  function populateManualFromImport(parsed) {
+    document.getElementById('manualTableBody').innerHTML = '';
+    manualRowId = 0;
+
+    if (parsed.date) {
+      const dp = parsed.date.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+      if (dp) {
+        document.getElementById('manualDate').value = `${dp[3]}-${dp[1].padStart(2,'0')}-${dp[2].padStart(2,'0')}`;
+      }
+      document.getElementById('manualIncludeDateOnLabel').checked = true;
+    } else {
+      document.getElementById('manualIncludeDateOnLabel').checked = false;
+    }
+
+    if (parsed.project) {
+      document.getElementById('manualProject').value = parsed.project;
+      document.getElementById('manualPrintProjectOnLabel').checked = true;
+      updateCharCounter(document.getElementById('manualProject'), 'manualProjectCounter');
+    } else {
+      document.getElementById('manualProject').value = '';
+      document.getElementById('manualPrintProjectOnLabel').checked = false;
+    }
+
+    for (const entry of parsed.entries) {
+      addManualRow(entry.line1, entry.line2, entry.qty);
+    }
+
+    document.getElementById('manualPreview').style.display = 'none';
+    document.getElementById('btnManualDownload').disabled = true;
+    document.getElementById('btnManualPrint').disabled = true;
+  }
 </script>
 </body>
 </html>
