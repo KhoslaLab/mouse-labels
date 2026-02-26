@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mouse Label Printer</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐭</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f0f0ec;
+    --surface: #ffffff;
+    --surface-alt: #f7f7f5;
+    --border: #d4d4cd;
+    --border-strong: #a8a89e;
+    --text: #1a1a18;
+    --text-muted: #6b6b63;
+    --accent: #2d5a27;
+    --accent-light: #e8f0e6;
+    --accent-hover: #1e3d1a;
+    --danger: #9b2c2c;
+    --danger-light: #fef2f2;
+    --warn: #92610e;
+    --warn-light: #fef9ec;
+    --warn-border: #e0c97a;
+    --tag-bg: #eef2ed;
+    --tag-border: #c5d4c2;
+    --radius: 6px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'IBM Plex Sans', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.5;
+  }
+
+  /* ---- Print: only raw ZPL text prints ---- */
+  @media print {
+    body > *:not(#printFrame) { display: none !important; }
+    #printFrame {
+      display: block !important;
+      position: static;
+      width: 100%;
+      background: white;
+    }
+    #printFrame pre {
+      display: block !important;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 10pt;
+      line-height: 1.2;
+      white-space: pre-wrap;
+      word-break: break-all;
+      margin: 0;
+      padding: 0;
+      color: black;
+    }
+  }
+
+  /* ---- Header ---- */
+  .app-header {
+    background: var(--text);
+    color: var(--bg);
+    padding: 16px 0 0 0;
+  }
+
+  .app-header .top-row {
+    max-width: 940px;
+    margin: 0 auto;
+    padding: 0 24px 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .app-header .help-link {
+    margin-left: auto;
+    font-size: 13px;
+    color: #999;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: color 0.15s;
+  }
+
+  .app-header .help-link:hover {
+    color: #fff;
+  }
+
+  .app-header .logo {
+    width: 40px;
+    height: 40px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .app-header h1 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+  }
+
+  .app-header .subtitle {
+    font-size: 13px;
+    color: #999;
+    font-weight: 400;
+  }
+
+  /* ---- Nav tabs ---- */
+  .nav-tabs {
+    max-width: 940px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    gap: 0;
+  }
+
+  .nav-tab {
+    padding: 10px 24px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #888;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.15s;
+    margin-bottom: -1px;
+  }
+
+  .nav-tab:hover {
+    color: #bbb;
+  }
+
+  .nav-tab.active {
+    color: #fff;
+    border-bottom-color: var(--accent);
+  }
+
+  .header-border {
+    border-bottom: 3px solid var(--accent);
+  }
+
+  /* ---- Layout ---- */
+  .container {
+    max-width: 940px;
+    margin: 0 auto;
+    padding: 24px;
+  }
+
+  .page { display: none; }
+  .page.active { display: block; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+
+  .card-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .card-title .step {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    background: var(--accent);
+    color: white;
+    border-radius: 50%;
+    font-size: 12px;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+
+  /* ---- Forms ---- */
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .form-row.two-col {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .form-row.four-col {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+
+  .form-group { position: relative; }
+
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+  }
+
+  input[type="number"],
+  input[type="text"],
+  input[type="date"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 15px;
+    background: var(--surface);
+    color: var(--text);
+    transition: border-color 0.15s;
+  }
+
+  input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-light);
+  }
+
+  input.input-warn {
+    border-color: var(--warn);
+    box-shadow: 0 0 0 3px var(--warn-light);
+  }
+
+  .char-counter {
+    position: absolute;
+    right: 8px;
+    bottom: -18px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .char-counter.over {
+    color: var(--danger);
+    font-weight: 600;
+  }
+
+  .char-counter.near {
+    color: var(--warn);
+    font-weight: 600;
+  }
+
+  .as-prefix {
+    position: relative;
+  }
+
+  .as-prefix::before {
+    content: 'AS';
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--accent);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .as-prefix input {
+    padding-left: 36px;
+  }
+
+  /* ---- Toggle buttons ---- */
+  .template-toggle {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .template-toggle button {
+    flex: 1;
+    padding: 10px 16px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--text-muted);
+  }
+
+  .template-toggle button.active {
+    border-color: var(--accent);
+    background: var(--accent-light);
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .template-toggle button:hover:not(.active) {
+    border-color: var(--border-strong);
+  }
+
+  /* ---- Chips ---- */
+  .label-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--tag-bg);
+    border: 1px solid var(--tag-border);
+    border-radius: 20px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--accent);
+  }
+
+  .chip.blank-chip {
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
+  .chip.warn-chip {
+    background: var(--warn-light);
+    border-color: var(--warn-border);
+    color: var(--warn);
+  }
+
+  .chip .remove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text-muted);
+    transition: all 0.15s;
+    line-height: 1;
+  }
+
+  .chip .remove:hover {
+    background: var(--danger-light);
+    color: var(--danger);
+  }
+
+  .add-label-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .add-label-row input {
+    flex: 1;
+  }
+
+  /* ---- Buttons ---- */
+  .btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--radius);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    background: var(--accent-hover);
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--accent);
+    border: 2px solid var(--accent);
+  }
+
+  .btn-outline:hover:not(:disabled) {
+    background: var(--accent-light);
+  }
+
+  .btn-sm {
+    padding: 7px 14px;
+    font-size: 13px;
+  }
+
+  .btn-danger-outline {
+    background: transparent;
+    color: var(--danger);
+    border: 2px solid var(--danger);
+  }
+
+  .btn-danger-outline:hover {
+    background: var(--danger-light);
+  }
+
+  .actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  /* ---- Preview ---- */
+  .preview-section {
+    margin-top: 8px;
+  }
+
+  .preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .label-count {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px;
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 4px;
+  }
+
+  .label-preview {
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    font-family: 'IBM Plex Mono', monospace;
+    position: relative;
+  }
+
+  .label-preview .label-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .label-preview .label-cell {
+    flex: 1;
+    text-align: center;
+    min-width: 0;
+  }
+
+  .label-preview .line1 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .label-preview .line2 {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--accent);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 20px;
+  }
+
+  .label-preview .line2.blank {
+    color: var(--border-strong);
+  }
+
+  .label-preview .line2.overflow {
+    color: var(--danger);
+  }
+
+  .label-preview .line1.overflow {
+    color: var(--danger);
+  }
+
+  .label-preview .date {
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .label-preview .label-index {
+    position: absolute;
+    top: 4px;
+    right: 8px;
+    font-size: 10px;
+    color: var(--border-strong);
+  }
+
+  .zpl-output {
+    background: var(--text);
+    color: #c8c8c0;
+    padding: 16px;
+    border-radius: var(--radius);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    max-height: 300px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
+    margin-top: 8px;
+  }
+
+  /* ---- Status & info ---- */
+  .status-bar {
+    padding: 12px 16px;
+    border-radius: var(--radius);
+    font-size: 13px;
+    font-weight: 500;
+    margin-top: 12px;
+    display: none;
+  }
+
+  .status-bar.success {
+    background: var(--accent-light);
+    color: var(--accent);
+    border: 1px solid var(--tag-border);
+    display: block;
+  }
+
+  .status-bar.error {
+    background: var(--danger-light);
+    color: var(--danger);
+    border: 1px solid #e8b4b4;
+    display: block;
+  }
+
+  .status-bar.warn {
+    background: var(--warn-light);
+    color: var(--warn);
+    border: 1px solid var(--warn-border);
+    display: block;
+  }
+
+  .info-box {
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 16px;
+    line-height: 1.6;
+  }
+
+  /* ---- Manual page table ---- */
+  .manual-entries {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 16px;
+  }
+
+  .manual-entries th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    text-align: left;
+    padding: 8px 8px 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .manual-entries td {
+    padding: 6px 8px 6px 0;
+    vertical-align: top;
+    position: relative;
+  }
+
+  .manual-entries input {
+    font-size: 14px;
+    padding: 8px 10px;
+  }
+
+  .manual-entries .row-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--border-strong);
+    padding-top: 14px;
+    width: 30px;
+  }
+
+  .manual-entries .col-actions {
+    width: 40px;
+    text-align: center;
+  }
+
+  .remove-row-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-muted);
+    font-size: 18px;
+    padding: 6px;
+    border-radius: 4px;
+    transition: all 0.15s;
+    margin-top: 4px;
+  }
+
+  .remove-row-btn:hover {
+    background: var(--danger-light);
+    color: var(--danger);
+  }
+
+  .qty-input {
+    width: 70px !important;
+  }
+
+  .hidden { display: none !important; }
+
+  #printFrame {
+    display: none;
+  }
+
+  @media (max-width: 700px) {
+    .form-row, .form-row.two-col, .form-row.four-col {
+      grid-template-columns: 1fr;
+    }
+    .template-toggle { flex-direction: column; }
+    .actions { flex-direction: column; }
+    .btn { justify-content: center; }
+    .preview-grid { grid-template-columns: 1fr; }
+    .manual-entries { font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Hidden print frame -->
+<div id="printFrame"><pre id="printContent"></pre></div>
+
+<header class="app-header">
+  <div class="top-row">
+    <div class="logo">🐭</div>
+    <div>
+      <h1>Mouse Label Printer</h1>
+      <div class="subtitle">ZPL label generator for Zebra printers</div>
+    </div>
+    <a href="USAGE.html" target="_blank" class="help-link">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r="1" fill="currentColor" stroke="none"/></svg>
+      Usage Guide
+    </a>
+  </div>
+  <nav class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('harvest')">Harvest Labels</button>
+    <button class="nav-tab" onclick="showPage('manual')">Manual Labels</button>
+  </nav>
+</header>
+<div class="header-border"></div>
+
+<div class="container">
+
+<!-- ============================================================ -->
+<!-- PAGE 1: HARVEST LABELS                                        -->
+<!-- ============================================================ -->
+<div id="page-harvest" class="page active">
+
+  <!-- Step 1 -->
+  <div class="card">
+    <div class="card-title"><span class="step">1</span> Mouse Range, Date &amp; Project</div>
+    <div class="form-row four-col">
+      <div>
+        <label for="asStart">First AS Number</label>
+        <div class="as-prefix">
+          <input type="number" id="asStart" min="1" placeholder="2243">
+        </div>
+      </div>
+      <div>
+        <label for="asEnd">Last AS Number</label>
+        <div class="as-prefix">
+          <input type="number" id="asEnd" min="1" placeholder="2250">
+        </div>
+      </div>
+      <div>
+        <label for="labelDate">Date</label>
+        <input type="date" id="labelDate">
+      </div>
+      <div class="form-group">
+        <label for="projectName">Project Name <span style="font-weight:400;color:var(--border-strong)">(optional)</span></label>
+        <input type="text" id="projectName" placeholder="e.g. INK-ATTAC">
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2 -->
+  <div class="card">
+    <div class="card-title"><span class="step">2</span> Sample Labels</div>
+    <div class="template-toggle">
+      <button id="btnStandard" class="active" onclick="setMode('standard')">Standard Harvest Template</button>
+      <button id="btnCustom" onclick="setMode('custom')">Custom Labels</button>
+    </div>
+
+    <div id="standardInfo" class="info-box" style="margin-top:0">
+      Uses the standard harvest template: <strong>Plasma ×3</strong>, <strong>LFemur+L4-6</strong>, <strong>LTibia+L1-3</strong>, <strong>RFem+RTib</strong>, <strong>Met</strong>, <strong>Dia</strong>, <strong>Vert</strong>, <strong>Met/Dia</strong>, <strong>Vert</strong> — 11 labels per mouse, printed 3-across on 4 physical labels (12th slot blank).
+    </div>
+
+    <div id="customSection" class="hidden">
+      <div class="label-chips" id="chipContainer"></div>
+      <div class="add-label-row">
+        <input type="text" id="newLabelInput" placeholder="Enter sample label name…" oninput="updateNewLabelCounter()" onkeydown="if(event.key==='Enter')addCustomLabel()">
+        <button class="btn btn-sm btn-outline" onclick="addCustomLabel()">+ Add</button>
+        <button class="btn btn-sm btn-outline" onclick="addBlankLabel()">+ Blank</button>
+        <button class="btn btn-sm btn-danger-outline" onclick="clearCustomLabels()">Clear</button>
+      </div>
+      <div id="newLabelWarn" class="hidden" style="margin-top:8px;font-size:12px;color:var(--warn);font-weight:500">
+        ⚠ Text may be too long — labels can fit ~18 characters per line.
+      </div>
+      <div class="info-box">
+        Add individual sample labels. Use <strong>+ Blank</strong> for a label with just the AS number and date. Labels are grouped 3 per physical label.
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 3 -->
+  <div class="card">
+    <div class="card-title"><span class="step">3</span> Generate &amp; Print</div>
+    <div class="actions">
+      <button class="btn btn-primary" onclick="generateHarvestLabels()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>
+        Generate Labels
+      </button>
+      <button class="btn btn-primary" id="btnHarvestPrint" onclick="printLabels()" disabled>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="2" width="12" height="6"/><rect x="2" y="8" width="20" height="10" rx="1"/><rect x="6" y="14" width="12" height="6"/></svg>
+        Print to Zebra
+      </button>
+      <button class="btn btn-outline" id="btnHarvestDownload" onclick="downloadFile('harvest')" disabled>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download .txt
+      </button>
+    </div>
+
+    <div class="info-box" style="margin-top:12px">
+      <strong>Print to Zebra</strong> opens the browser print dialog — select your Zebra printer and print.<br>
+      <strong>Download .txt</strong> saves a text file you can open in Notepad and print via File → Print.
+    </div>
+
+    <div id="harvestStatus" class="status-bar"></div>
+
+    <div class="preview-section" id="harvestPreview" style="display:none">
+      <div class="preview-header">
+        <div class="card-title" style="margin:0;border:none;padding:0">Label Preview</div>
+        <div class="label-count" id="harvestLabelCount"></div>
+      </div>
+      <div class="preview-grid" id="harvestPreviewGrid"></div>
+      <details style="margin-top:12px">
+        <summary style="cursor:pointer;font-size:13px;color:var(--text-muted);font-weight:500;user-select:none">Show raw ZPL</summary>
+        <div class="zpl-output" id="harvestZplOutput"></div>
+      </details>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 2: MANUAL LABELS                                         -->
+<!-- ============================================================ -->
+<div id="page-manual" class="page">
+
+  <!-- Entries -->
+  <div class="card">
+    <div class="card-title"><span class="step">1</span> Create Labels</div>
+    <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px">
+      Enter any text for Line 1 and Line 2 of each label. Date is shared across all labels. Set Qty to print multiples of the same label. Labels are grouped 3-across per physical label.
+    </p>
+
+    <div class="form-row" style="margin-bottom:20px">
+      <div>
+        <label for="manualDate">Date</label>
+        <input type="date" id="manualDate">
+      </div>
+      <div class="form-group">
+        <label for="manualProject">Project Name <span style="font-weight:400;color:var(--border-strong)">(optional)</span></label>
+        <input type="text" id="manualProject" placeholder="e.g. INK-ATTAC">
+      </div>
+      <div></div>
+    </div>
+
+    <table class="manual-entries">
+      <thead>
+        <tr>
+          <th style="width:30px">#</th>
+          <th>Line 1 (top)</th>
+          <th>Line 2 (middle)</th>
+          <th style="width:70px">Qty</th>
+          <th style="width:40px"></th>
+        </tr>
+      </thead>
+      <tbody id="manualTableBody">
+      </tbody>
+    </table>
+
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-sm btn-outline" onclick="addManualRow()">+ Add Row</button>
+      <button class="btn btn-sm btn-danger-outline" onclick="clearManualRows()">Clear All</button>
+    </div>
+  </div>
+
+  <!-- Generate & Print -->
+  <div class="card">
+    <div class="card-title"><span class="step">2</span> Generate &amp; Print</div>
+    <div class="actions">
+      <button class="btn btn-primary" onclick="generateManualLabels()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>
+        Generate Labels
+      </button>
+      <button class="btn btn-primary" id="btnManualPrint" onclick="printLabels()" disabled>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="2" width="12" height="6"/><rect x="2" y="8" width="20" height="10" rx="1"/><rect x="6" y="14" width="12" height="6"/></svg>
+        Print to Zebra
+      </button>
+      <button class="btn btn-outline" id="btnManualDownload" onclick="downloadFile('manual')" disabled>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download .txt
+      </button>
+    </div>
+
+    <div class="info-box" style="margin-top:12px">
+      <strong>Print to Zebra</strong> opens the browser print dialog — select your Zebra printer and print.<br>
+      <strong>Download .txt</strong> saves a text file you can open in Notepad and print via File → Print.
+    </div>
+
+    <div id="manualStatus" class="status-bar"></div>
+
+    <div class="preview-section" id="manualPreview" style="display:none">
+      <div class="preview-header">
+        <div class="card-title" style="margin:0;border:none;padding:0">Label Preview</div>
+        <div class="label-count" id="manualLabelCount"></div>
+      </div>
+      <div class="preview-grid" id="manualPreviewGrid"></div>
+      <details style="margin-top:12px">
+        <summary style="cursor:pointer;font-size:13px;color:var(--text-muted);font-weight:500;user-select:none">Show raw ZPL</summary>
+        <div class="zpl-output" id="manualZplOutput"></div>
+      </details>
+    </div>
+  </div>
+
+</div>
+</div><!-- /container -->
+
+<script>
+  /* ======== Constants ======== */
+  const MAX_CHARS = 18;
+  const X_POS = [240, 440, 640];
+
+  const STANDARD_LABELS = [
+    'Plasma', 'Plasma', 'Plasma',
+    'LFemur+L4-6', 'LTibia+L1-3', 'RFem+RTib',
+    'Met', 'Dia', 'Vert',
+    'Met/Dia', 'Vert', ''
+  ];
+
+  let customLabels = [];
+  let harvestMode = 'standard';
+  let currentZPL = '';
+  let manualRowId = 0;
+
+  /* ======== Init ======== */
+  document.getElementById('labelDate').valueAsDate = new Date();
+  document.getElementById('manualDate').valueAsDate = new Date();
+  addManualRow();
+  addManualRow();
+  addManualRow();
+
+  /* ======== Page navigation ======== */
+  function showPage(page) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(`page-${page}`).classList.add('active');
+    document.querySelectorAll('.nav-tab')[page === 'harvest' ? 0 : 1].classList.add('active');
+  }
+
+  /* ======== Harvest: mode toggle ======== */
+  function setMode(m) {
+    harvestMode = m;
+    document.getElementById('btnStandard').classList.toggle('active', m === 'standard');
+    document.getElementById('btnCustom').classList.toggle('active', m === 'custom');
+    document.getElementById('standardInfo').classList.toggle('hidden', m !== 'standard');
+    document.getElementById('customSection').classList.toggle('hidden', m !== 'custom');
+  }
+
+  /* ======== Harvest: custom label chips ======== */
+  function addCustomLabel() {
+    const input = document.getElementById('newLabelInput');
+    const val = input.value.trim();
+    if (!val) return;
+    customLabels.push(val);
+    input.value = '';
+    updateNewLabelCounter();
+    renderChips();
+    input.focus();
+  }
+
+  function addBlankLabel() {
+    customLabels.push('');
+    renderChips();
+  }
+
+  function removeCustomLabel(i) {
+    customLabels.splice(i, 1);
+    renderChips();
+  }
+
+  function clearCustomLabels() {
+    customLabels = [];
+    renderChips();
+  }
+
+  function renderChips() {
+    const container = document.getElementById('chipContainer');
+    container.innerHTML = customLabels.map((l, i) => {
+      const isBlank = l === '';
+      const isLong = l.length > MAX_CHARS;
+      let cls = 'chip';
+      if (isBlank) cls += ' blank-chip';
+      else if (isLong) cls += ' warn-chip';
+      const display = isBlank ? '(blank)' : escHtml(l) + (isLong ? ' ⚠' : '');
+      return `<span class="${cls}">${display}<button class="remove" onclick="removeCustomLabel(${i})" title="Remove">×</button></span>`;
+    }).join('');
+  }
+
+  function updateNewLabelCounter() {
+    const val = document.getElementById('newLabelInput').value;
+    document.getElementById('newLabelWarn').classList.toggle('hidden', val.length <= MAX_CHARS);
+  }
+
+  /* ======== Manual: row management ======== */
+  function addManualRow(line1, line2, qty) {
+    const id = manualRowId++;
+    const tbody = document.getElementById('manualTableBody');
+    const tr = document.createElement('tr');
+    tr.id = `mrow-${id}`;
+    tr.innerHTML = `
+      <td class="row-num">${tbody.children.length + 1}</td>
+      <td class="form-group">
+        <input type="text" class="m-line1" value="${escAttr(line1 || '')}" placeholder="e.g. AS2243" oninput="checkManualLen(this)">
+        <span class="char-counter hidden"></span>
+      </td>
+      <td class="form-group">
+        <input type="text" class="m-line2" value="${escAttr(line2 || '')}" placeholder="e.g. Plasma" oninput="checkManualLen(this)">
+        <span class="char-counter hidden"></span>
+      </td>
+      <td><input type="number" class="m-qty qty-input" value="${qty || 1}" min="1" max="999"></td>
+      <td class="col-actions"><button class="remove-row-btn" onclick="removeManualRow(${id})" title="Remove row">×</button></td>`;
+    tbody.appendChild(tr);
+    renumberManualRows();
+  }
+
+  function removeManualRow(id) {
+    const row = document.getElementById(`mrow-${id}`);
+    if (row) row.remove();
+    renumberManualRows();
+  }
+
+  function clearManualRows() {
+    document.getElementById('manualTableBody').innerHTML = '';
+    manualRowId = 0;
+    addManualRow();
+  }
+
+  function renumberManualRows() {
+    document.querySelectorAll('#manualTableBody tr').forEach((tr, i) => {
+      tr.querySelector('.row-num').textContent = i + 1;
+    });
+  }
+
+  function checkManualLen(input) {
+    const counter = input.parentElement.querySelector('.char-counter');
+    const len = input.value.length;
+    if (len > MAX_CHARS) {
+      counter.textContent = `${len}/${MAX_CHARS}`;
+      counter.className = 'char-counter over';
+      input.classList.add('input-warn');
+    } else if (len > MAX_CHARS - 4) {
+      counter.textContent = `${len}/${MAX_CHARS}`;
+      counter.className = 'char-counter near';
+      input.classList.remove('input-warn');
+    } else {
+      counter.className = 'char-counter hidden';
+      input.classList.remove('input-warn');
+    }
+  }
+
+  /* ======== Shared utilities ======== */
+  function escHtml(s) {
+    const d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  function escAttr(s) {
+    return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function formatDate(dateStr) {
+    if (!dateStr) return '';
+    const d = new Date(dateStr + 'T00:00:00');
+    return `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`;
+  }
+
+  function formatDateYMD(dateStr) {
+    if (!dateStr) return '';
+    const d = new Date(dateStr + 'T00:00:00');
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}${m}${day}`;
+  }
+
+  function sanitizeFilename(s) {
+    return s.replace(/[^a-zA-Z0-9_\-. ]/g, '').replace(/\s+/g, '_');
+  }
+
+  /**
+   * Build ZPL for a list of individual label entries.
+   * Each entry: { line1, line2 }
+   * Groups them 3-across per physical label.
+   * Returns array of { zpl, cells: [{line1,line2},...] , date }
+   */
+  function buildZPL(entries, dateStr) {
+    const blocks = [];
+    for (let i = 0; i < entries.length; i += 3) {
+      const group = entries.slice(i, i + 3);
+      while (group.length < 3) group.push({ line1: '', line2: '' });
+
+      let zpl = `^XA^CFD^FO${X_POS[0]},20^AD^FD${group[0].line1}`;
+      zpl += `^FS^FO${X_POS[1]},20^AD^FD${group[1].line1}`;
+      zpl += `^FS^FO${X_POS[2]},20^AD^FD${group[2].line1}`;
+      zpl += `^FS^FO${X_POS[0]},50^AD^FD${group[0].line2}`;
+      zpl += `^FS^FO${X_POS[1]},50^AD^FD${group[1].line2}`;
+      zpl += `^FS^FO${X_POS[2]},50^AD^FD${group[2].line2}`;
+      zpl += `^FS^FO${X_POS[0]},80^AD^FD${dateStr}`;
+      zpl += `^FS^FO${X_POS[1]},80^AD^FD${dateStr}`;
+      zpl += `^FS^FO${X_POS[2]},80^AD^FD${dateStr}`;
+      zpl += '^FS^XZ';
+
+      blocks.push({ zpl, cells: group, date: dateStr });
+    }
+    return blocks;
+  }
+
+  function renderPreview(blocks, gridEl) {
+    gridEl.innerHTML = blocks.map((b, idx) => {
+      const cells = b.cells.map(c => {
+        const l1over = c.line1.length > MAX_CHARS ? ' overflow' : '';
+        const l2cls = c.line2 === '' ? 'line2 blank' : (c.line2.length > MAX_CHARS ? 'line2 overflow' : 'line2');
+        return `<div class="label-cell">
+          <div class="line1${l1over}">${c.line1 ? escHtml(c.line1) : '&nbsp;'}</div>
+          <div class="${l2cls}">${c.line2 ? escHtml(c.line2) : '&nbsp;'}</div>
+          <div class="date">${escHtml(b.date)}</div>
+        </div>`;
+      }).join('');
+      return `<div class="label-preview"><span class="label-index">#${idx + 1}</span><div class="label-row">${cells}</div></div>`;
+    }).join('');
+  }
+
+  function checkLengthWarnings(entries) {
+    const long = entries.filter(e => e.line1.length > MAX_CHARS || e.line2.length > MAX_CHARS);
+    return long.length;
+  }
+
+  /* ======== Harvest: generate ======== */
+  function generateHarvestLabels() {
+    const startNum = parseInt(document.getElementById('asStart').value);
+    const endNum = parseInt(document.getElementById('asEnd').value);
+    const dateVal = document.getElementById('labelDate').value;
+
+    if (isNaN(startNum)) return showHarvestStatus('Please enter a starting AS number.', 'error');
+    const effectiveEnd = isNaN(endNum) ? startNum : endNum;
+    if (effectiveEnd < startNum) return showHarvestStatus('Last AS number must be ≥ first AS number.', 'error');
+    if (!dateVal) return showHarvestStatus('Please select a date.', 'error');
+
+    const sampleNames = harvestMode === 'standard' ? [...STANDARD_LABELS] : [...customLabels];
+    if (sampleNames.length === 0) return showHarvestStatus('Please add at least one sample label.', 'error');
+
+    const dateStr = formatDate(dateVal);
+    let allEntries = [];
+
+    for (let n = startNum; n <= effectiveEnd; n++) {
+      const asId = `AS${n}`;
+      sampleNames.forEach(s => allEntries.push({ line1: asId, line2: s }));
+    }
+
+    const blocks = buildZPL(allEntries, dateStr);
+    currentZPL = blocks.map(b => b.zpl).join('\n');
+    document.getElementById('printContent').textContent = currentZPL;
+
+    renderPreview(blocks, document.getElementById('harvestPreviewGrid'));
+
+    const mouseCount = effectiveEnd - startNum + 1;
+    document.getElementById('harvestLabelCount').textContent =
+      `${blocks.length} physical labels for ${mouseCount} mouse${mouseCount > 1 ? 's' : ''}`;
+
+    document.getElementById('harvestZplOutput').textContent = currentZPL;
+    document.getElementById('harvestPreview').style.display = '';
+    document.getElementById('btnHarvestDownload').disabled = false;
+    document.getElementById('btnHarvestPrint').disabled = false;
+
+    const longCount = checkLengthWarnings(allEntries);
+    let msg = `Generated ${blocks.length} labels for AS${startNum}${effectiveEnd !== startNum ? ' – AS' + effectiveEnd : ''}.`;
+    if (longCount > 0) {
+      msg += ` ⚠ ${longCount} label${longCount > 1 ? 's have' : ' has'} text longer than ${MAX_CHARS} characters and may not fit.`;
+      showHarvestStatus(msg, 'warn');
+    } else {
+      showHarvestStatus(msg, 'success');
+    }
+  }
+
+  /* ======== Manual: generate ======== */
+  function generateManualLabels() {
+    const dateVal = document.getElementById('manualDate').value;
+    if (!dateVal) return showManualStatus('Please select a date.', 'error');
+
+    const rows = document.querySelectorAll('#manualTableBody tr');
+    let allEntries = [];
+    let hasContent = false;
+
+    rows.forEach(tr => {
+      const l1 = tr.querySelector('.m-line1').value;
+      const l2 = tr.querySelector('.m-line2').value;
+      const qty = parseInt(tr.querySelector('.m-qty').value) || 1;
+      if (l1 || l2) {
+        hasContent = true;
+        for (let i = 0; i < qty; i++) allEntries.push({ line1: l1, line2: l2 });
+      }
+    });
+
+    if (!hasContent) return showManualStatus('Please fill in at least one label row.', 'error');
+
+    const dateStr = formatDate(dateVal);
+    const blocks = buildZPL(allEntries, dateStr);
+    currentZPL = blocks.map(b => b.zpl).join('\n');
+    document.getElementById('printContent').textContent = currentZPL;
+
+    renderPreview(blocks, document.getElementById('manualPreviewGrid'));
+    document.getElementById('manualLabelCount').textContent = `${blocks.length} physical labels (${allEntries.length} individual labels)`;
+    document.getElementById('manualZplOutput').textContent = currentZPL;
+    document.getElementById('manualPreview').style.display = '';
+    document.getElementById('btnManualDownload').disabled = false;
+    document.getElementById('btnManualPrint').disabled = false;
+
+    const longCount = checkLengthWarnings(allEntries);
+    let msg = `Generated ${blocks.length} physical labels (${allEntries.length} individual labels).`;
+    if (longCount > 0) {
+      msg += ` ⚠ ${longCount} label${longCount > 1 ? 's have' : ' has'} text longer than ${MAX_CHARS} characters and may not fit.`;
+      showManualStatus(msg, 'warn');
+    } else {
+      showManualStatus(msg, 'success');
+    }
+  }
+
+  /* ======== Print & Download ======== */
+  function printLabels() {
+    if (!currentZPL) return;
+    window.print();
+  }
+
+  function downloadFile(source) {
+    if (!currentZPL) return;
+
+    let parts = [];
+    if (source === 'harvest') {
+      const proj = document.getElementById('projectName').value.trim();
+      const start = document.getElementById('asStart').value;
+      const end = document.getElementById('asEnd').value || start;
+      const dateYMD = formatDateYMD(document.getElementById('labelDate').value);
+      parts.push(dateYMD);
+      if (proj) parts.push(sanitizeFilename(proj));
+      parts.push(`AS${start}-AS${end}`);
+    } else {
+      const proj = document.getElementById('manualProject').value.trim();
+      const dateYMD = formatDateYMD(document.getElementById('manualDate').value);
+      parts.push(dateYMD);
+      if (proj) parts.push(sanitizeFilename(proj));
+      parts.push('manual_labels');
+    }
+
+    const filename = parts.join('_') + '.txt';
+    const blob = new Blob([currentZPL], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+
+    const statusFn = source === 'harvest' ? showHarvestStatus : showManualStatus;
+    statusFn(`Downloaded "${filename}" — open in Notepad and print via File → Print.`, 'success');
+  }
+
+  /* ======== Status helpers ======== */
+  function showHarvestStatus(msg, type) {
+    const bar = document.getElementById('harvestStatus');
+    bar.textContent = msg;
+    bar.className = `status-bar ${type}`;
+  }
+
+  function showManualStatus(msg, type) {
+    const bar = document.getElementById('manualStatus');
+    bar.textContent = msg;
+    bar.className = `status-bar ${type}`;
+  }
+</script>
+
+</body>
+</html>
