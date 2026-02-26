@@ -29,9 +29,7 @@
     --radius: 6px;
     --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
   }
-
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
   body {
     font-family: 'IBM Plex Sans', -apple-system, sans-serif;
     background: var(--bg);
@@ -40,647 +38,146 @@
     line-height: 1.5;
   }
 
-  /* ---- Print: only raw ZPL text prints ---- */
+  /* ---- Print ---- */
   @media print {
     body > *:not(#printFrame) { display: none !important; }
-    #printFrame {
-      display: block !important;
-      position: static;
-      width: 100%;
-      background: white;
-    }
-    #printFrame pre {
-      display: block !important;
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 10pt;
-      line-height: 1.2;
-      white-space: pre-wrap;
-      word-break: break-all;
-      margin: 0;
-      padding: 0;
-      color: black;
-    }
+    #printFrame { display: block !important; position: static; width: 100%; background: white; }
+    #printFrame pre { display: block !important; font-family: 'Courier New', Courier, monospace; font-size: 10pt; line-height: 1.2; white-space: pre-wrap; word-break: break-all; margin: 0; padding: 0; color: black; }
   }
 
   /* ---- Header ---- */
-  .app-header {
-    background: var(--text);
-    color: var(--bg);
-    padding: 16px 0 0 0;
-  }
-
-  .app-header .top-row {
-    max-width: 940px;
-    margin: 0 auto;
-    padding: 0 24px 14px 24px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-
-  .app-header .help-link {
-    margin-left: auto;
-    font-size: 13px;
-    color: #999;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    transition: color 0.15s;
-  }
-
-  .app-header .help-link:hover {
-    color: #fff;
-  }
-
-  .app-header .logo {
-    width: 40px;
-    height: 40px;
-    background: var(--accent);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    flex-shrink: 0;
-  }
-
-  .app-header h1 {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 20px;
-    font-weight: 600;
-    letter-spacing: -0.5px;
-  }
-
-  .app-header .subtitle {
-    font-size: 13px;
-    color: #999;
-    font-weight: 400;
-  }
-
-  /* ---- Nav tabs ---- */
-  .nav-tabs {
-    max-width: 940px;
-    margin: 0 auto;
-    padding: 0 24px;
-    display: flex;
-    gap: 0;
-  }
-
-  .nav-tab {
-    padding: 10px 24px;
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    color: #888;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    border-bottom: 3px solid transparent;
-    transition: all 0.15s;
-    margin-bottom: -1px;
-  }
-
-  .nav-tab:hover {
-    color: #bbb;
-  }
-
-  .nav-tab.active {
-    color: #fff;
-    border-bottom-color: var(--accent);
-  }
-
-  .header-border {
-    border-bottom: 3px solid var(--accent);
-  }
+  .app-header { background: var(--text); color: var(--bg); padding: 16px 0 0 0; }
+  .app-header .top-row { max-width: 940px; margin: 0 auto; padding: 0 24px 14px 24px; display: flex; align-items: center; gap: 16px; }
+  .app-header .help-link { margin-left: auto; font-size: 13px; color: #999; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; transition: color 0.15s; }
+  .app-header .help-link:hover { color: #fff; }
+  .app-header .logo { width: 40px; height: 40px; background: var(--accent); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+  .app-header h1 { font-family: 'IBM Plex Mono', monospace; font-size: 20px; font-weight: 600; letter-spacing: -0.5px; }
+  .app-header .subtitle { font-size: 13px; color: #999; font-weight: 400; }
+  .nav-tabs { max-width: 940px; margin: 0 auto; padding: 0 24px; display: flex; gap: 0; }
+  .nav-tab { padding: 10px 24px; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; font-weight: 600; color: #888; background: transparent; border: none; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.15s; margin-bottom: -1px; }
+  .nav-tab:hover { color: #bbb; }
+  .nav-tab.active { color: #fff; border-bottom-color: var(--accent); }
+  .header-border { border-bottom: 3px solid var(--accent); }
 
   /* ---- Layout ---- */
-  .container {
-    max-width: 940px;
-    margin: 0 auto;
-    padding: 24px;
-  }
-
+  .container { max-width: 940px; margin: 0 auto; padding: 24px; }
   .page { display: none; }
   .page.active { display: block; }
-
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 24px;
-    margin-bottom: 20px;
-    box-shadow: var(--shadow);
-  }
-
-  .card-title {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--text-muted);
-    margin-bottom: 16px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .card-title .step {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 22px;
-    height: 22px;
-    background: var(--accent);
-    color: white;
-    border-radius: 50%;
-    font-size: 12px;
-    margin-right: 8px;
-    vertical-align: middle;
-  }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 20px; box-shadow: var(--shadow); }
+  .card-title { font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+  .card-title .step { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; background: var(--accent); color: white; border-radius: 50%; font-size: 12px; margin-right: 8px; vertical-align: middle; }
 
   /* ---- Forms ---- */
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 16px;
-  }
-
-  .form-row.two-col {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .form-row.four-col {
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-  }
-
+  .form-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .form-row.four-col { grid-template-columns: 1fr 1fr 1fr 1fr; }
   .form-group { position: relative; }
+  label { display: block; font-size: 13px; font-weight: 500; color: var(--text-muted); margin-bottom: 5px; }
+  input[type="number"], input[type="text"], input[type="date"] { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius); font-family: 'IBM Plex Mono', monospace; font-size: 15px; background: var(--surface); color: var(--text); transition: border-color 0.15s; }
+  input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
+  input.input-warn { border-color: var(--warn); box-shadow: 0 0 0 3px var(--warn-light); }
 
-  label {
-    display: block;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text-muted);
-    margin-bottom: 5px;
-  }
+  .char-counter { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-muted); margin-top: 3px; text-align: right; display: none; }
+  .char-counter.over { color: var(--danger); font-weight: 600; display: block; }
+  .char-counter.near { color: var(--warn); font-weight: 600; display: block; }
 
-  input[type="number"],
-  input[type="text"],
-  input[type="date"] {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 15px;
-    background: var(--surface);
-    color: var(--text);
-    transition: border-color 0.15s;
-  }
-
-  input:focus {
-    outline: none;
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px var(--accent-light);
-  }
-
-  input.input-warn {
-    border-color: var(--warn);
-    box-shadow: 0 0 0 3px var(--warn-light);
-  }
-
-  .char-counter {
-    position: absolute;
-    right: 8px;
-    bottom: -18px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    color: var(--text-muted);
-  }
-
-  .char-counter.over {
-    color: var(--danger);
-    font-weight: 600;
-  }
-
-  .char-counter.near {
-    color: var(--warn);
-    font-weight: 600;
-  }
-
-  .as-prefix {
-    position: relative;
-  }
-
-  .as-prefix::before {
-    content: 'AS';
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--accent);
-    pointer-events: none;
-    z-index: 1;
-  }
-
-  .as-prefix input {
-    padding-left: 36px;
-  }
+  .as-prefix { position: relative; }
+  .as-prefix::before { content: 'AS'; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-family: 'IBM Plex Mono', monospace; font-size: 15px; font-weight: 600; color: var(--accent); pointer-events: none; z-index: 1; }
+  .as-prefix input { padding-left: 36px; }
 
   /* ---- Toggle buttons ---- */
-  .template-toggle {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 16px;
-  }
+  .template-toggle { display: flex; gap: 8px; margin-bottom: 16px; }
+  .template-toggle button { flex: 1; padding: 10px 16px; border: 2px solid var(--border); border-radius: var(--radius); background: var(--surface); font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.15s; color: var(--text-muted); }
+  .template-toggle button.active { border-color: var(--accent); background: var(--accent-light); color: var(--accent); font-weight: 600; }
+  .template-toggle button:hover:not(.active) { border-color: var(--border-strong); }
 
-  .template-toggle button {
-    flex: 1;
-    padding: 10px 16px;
-    border: 2px solid var(--border);
-    border-radius: var(--radius);
-    background: var(--surface);
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.15s;
-    color: var(--text-muted);
-  }
+  /* ---- Chips (drag & drop, click-to-edit) ---- */
+  .label-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; min-height: 10px; }
+  .chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: var(--tag-bg); border: 1px solid var(--tag-border); border-radius: 20px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 500; color: var(--accent); cursor: grab; user-select: none; transition: box-shadow 0.15s, opacity 0.15s; }
+  .chip:active { cursor: grabbing; }
+  .chip.dragging { opacity: 0.4; }
+  .chip.drag-over { box-shadow: -3px 0 0 0 var(--accent); }
+  .chip.blank-chip { color: var(--text-muted); font-style: italic; }
+  .chip.warn-chip { background: var(--warn-light); border-color: var(--warn-border); color: var(--warn); }
+  .chip .chip-text { cursor: pointer; border-bottom: 1px dashed transparent; transition: border-color 0.15s; }
+  .chip .chip-text:hover { border-bottom-color: var(--accent); }
+  .chip .remove { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; background: transparent; border: none; cursor: pointer; font-size: 14px; color: var(--text-muted); transition: all 0.15s; line-height: 1; }
+  .chip .remove:hover { background: var(--danger-light); color: var(--danger); }
 
-  .template-toggle button.active {
-    border-color: var(--accent);
-    background: var(--accent-light);
-    color: var(--accent);
-    font-weight: 600;
-  }
+  .chip-edit-input { font-family: 'IBM Plex Mono', monospace; font-size: 13px; border: 1px solid var(--accent); border-radius: 4px; padding: 2px 6px; width: 120px; outline: none; background: white; }
 
-  .template-toggle button:hover:not(.active) {
-    border-color: var(--border-strong);
-  }
-
-  /* ---- Chips ---- */
-  .label-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 12px;
-  }
-
-  .chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    background: var(--tag-bg);
-    border: 1px solid var(--tag-border);
-    border-radius: 20px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--accent);
-  }
-
-  .chip.blank-chip {
-    color: var(--text-muted);
-    font-style: italic;
-  }
-
-  .chip.warn-chip {
-    background: var(--warn-light);
-    border-color: var(--warn-border);
-    color: var(--warn);
-  }
-
-  .chip .remove {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
-    color: var(--text-muted);
-    transition: all 0.15s;
-    line-height: 1;
-  }
-
-  .chip .remove:hover {
-    background: var(--danger-light);
-    color: var(--danger);
-  }
-
-  .add-label-row {
-    display: flex;
-    gap: 8px;
-  }
-
-  .add-label-row input {
-    flex: 1;
-  }
+  .add-label-row { display: flex; gap: 8px; }
+  .add-label-row input { flex: 1; }
 
   /* ---- Buttons ---- */
-  .btn {
-    padding: 10px 20px;
-    border: none;
-    border-radius: var(--radius);
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.15s;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .btn:disabled {
-    opacity: 0.45;
-    cursor: not-allowed;
-  }
-
-  .btn-primary {
-    background: var(--accent);
-    color: white;
-  }
-
-  .btn-primary:hover:not(:disabled) {
-    background: var(--accent-hover);
-  }
-
-  .btn-outline {
-    background: transparent;
-    color: var(--accent);
-    border: 2px solid var(--accent);
-  }
-
-  .btn-outline:hover:not(:disabled) {
-    background: var(--accent-light);
-  }
-
-  .btn-sm {
-    padding: 7px 14px;
-    font-size: 13px;
-  }
-
-  .btn-danger-outline {
-    background: transparent;
-    color: var(--danger);
-    border: 2px solid var(--danger);
-  }
-
-  .btn-danger-outline:hover {
-    background: var(--danger-light);
-  }
-
-  .actions {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
+  .btn { padding: 10px 20px; border: none; border-radius: var(--radius); font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 8px; }
+  .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  .btn-primary { background: var(--accent); color: white; }
+  .btn-primary:hover:not(:disabled) { background: var(--accent-hover); }
+  .btn-outline { background: transparent; color: var(--accent); border: 2px solid var(--accent); }
+  .btn-outline:hover:not(:disabled) { background: var(--accent-light); }
+  .btn-sm { padding: 7px 14px; font-size: 13px; }
+  .btn-danger-outline { background: transparent; color: var(--danger); border: 2px solid var(--danger); }
+  .btn-danger-outline:hover { background: var(--danger-light); }
+  .actions { display: flex; gap: 12px; flex-wrap: wrap; }
 
   /* ---- Preview ---- */
-  .preview-section {
-    margin-top: 8px;
-  }
+  .preview-section { margin-top: 8px; }
+  .preview-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .label-count { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--text-muted); }
+  .preview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; max-height: 500px; overflow-y: auto; padding: 4px; }
+  .label-preview { background: var(--surface-alt); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px; font-family: 'IBM Plex Mono', monospace; position: relative; }
+  .label-preview .label-row { display: flex; justify-content: space-between; gap: 16px; }
+  .label-preview .label-cell { flex: 1; text-align: center; min-width: 0; }
+  .label-preview .line1 { font-size: 14px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .label-preview .line2 { font-size: 13px; font-weight: 500; color: var(--accent); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-height: 20px; }
+  .label-preview .line2.blank { color: var(--border-strong); }
+  .label-preview .line2.overflow, .label-preview .line1.overflow { color: var(--danger); }
+  .label-preview .date { font-size: 11px; color: var(--text-muted); }
+  .label-preview .line4 { font-size: 11px; color: #7a6b3a; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .label-preview .line4.overflow { color: var(--danger); }
+  .label-preview .label-index { position: absolute; top: 4px; right: 8px; font-size: 10px; color: var(--border-strong); }
 
-  .preview-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-  }
-
-  .label-count {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 13px;
-    color: var(--text-muted);
-  }
-
-  .preview-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 12px;
-    max-height: 500px;
-    overflow-y: auto;
-    padding: 4px;
-  }
-
-  .label-preview {
-    background: var(--surface-alt);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 12px 16px;
-    font-family: 'IBM Plex Mono', monospace;
-    position: relative;
-  }
-
-  .label-preview .label-row {
-    display: flex;
-    justify-content: space-between;
-    gap: 16px;
-  }
-
-  .label-preview .label-cell {
-    flex: 1;
-    text-align: center;
-    min-width: 0;
-  }
-
-  .label-preview .line1 {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--text);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .label-preview .line2 {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--accent);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    min-height: 20px;
-  }
-
-  .label-preview .line2.blank {
-    color: var(--border-strong);
-  }
-
-  .label-preview .line2.overflow {
-    color: var(--danger);
-  }
-
-  .label-preview .line1.overflow {
-    color: var(--danger);
-  }
-
-  .label-preview .date {
-    font-size: 11px;
-    color: var(--text-muted);
-  }
-
-  .label-preview .label-index {
-    position: absolute;
-    top: 4px;
-    right: 8px;
-    font-size: 10px;
-    color: var(--border-strong);
-  }
-
-  .zpl-output {
-    background: var(--text);
-    color: #c8c8c0;
-    padding: 16px;
-    border-radius: var(--radius);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    line-height: 1.6;
-    max-height: 300px;
-    overflow-y: auto;
-    white-space: pre-wrap;
-    word-break: break-all;
-    margin-top: 8px;
-  }
+  .zpl-output { background: var(--text); color: #c8c8c0; padding: 16px; border-radius: var(--radius); font-family: 'IBM Plex Mono', monospace; font-size: 12px; line-height: 1.6; max-height: 300px; overflow-y: auto; white-space: pre-wrap; word-break: break-all; margin-top: 8px; }
 
   /* ---- Status & info ---- */
-  .status-bar {
-    padding: 12px 16px;
-    border-radius: var(--radius);
-    font-size: 13px;
-    font-weight: 500;
-    margin-top: 12px;
-    display: none;
-  }
-
-  .status-bar.success {
-    background: var(--accent-light);
-    color: var(--accent);
-    border: 1px solid var(--tag-border);
-    display: block;
-  }
-
-  .status-bar.error {
-    background: var(--danger-light);
-    color: var(--danger);
-    border: 1px solid #e8b4b4;
-    display: block;
-  }
-
-  .status-bar.warn {
-    background: var(--warn-light);
-    color: var(--warn);
-    border: 1px solid var(--warn-border);
-    display: block;
-  }
-
-  .info-box {
-    background: var(--surface-alt);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--accent);
-    border-radius: 0 var(--radius) var(--radius) 0;
-    padding: 12px 16px;
-    font-size: 13px;
-    color: var(--text-muted);
-    margin-top: 16px;
-    line-height: 1.6;
-  }
+  .status-bar { padding: 12px 16px; border-radius: var(--radius); font-size: 13px; font-weight: 500; margin-top: 12px; display: none; }
+  .status-bar.success { background: var(--accent-light); color: var(--accent); border: 1px solid var(--tag-border); display: block; }
+  .status-bar.error { background: var(--danger-light); color: var(--danger); border: 1px solid #e8b4b4; display: block; }
+  .status-bar.warn { background: var(--warn-light); color: var(--warn); border: 1px solid var(--warn-border); display: block; }
+  .info-box { background: var(--surface-alt); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0; padding: 12px 16px; font-size: 13px; color: var(--text-muted); margin-top: 16px; line-height: 1.6; }
 
   /* ---- Manual page table ---- */
-  .manual-entries {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 16px;
-  }
+  .manual-entries { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+  .manual-entries th { font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); text-align: left; padding: 8px 8px 8px 0; border-bottom: 1px solid var(--border); }
+  .manual-entries td { padding: 6px 8px 6px 0; vertical-align: top; position: relative; }
+  .manual-entries input { font-size: 14px; padding: 8px 10px; }
+  .manual-entries .row-num { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--border-strong); padding-top: 14px; width: 30px; }
+  .manual-entries .col-actions { width: 40px; text-align: center; }
+  .remove-row-btn { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 18px; padding: 6px; border-radius: 4px; transition: all 0.15s; margin-top: 4px; }
+  .remove-row-btn:hover { background: var(--danger-light); color: var(--danger); }
+  .qty-input { width: 70px !important; }
 
-  .manual-entries th {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--text-muted);
-    text-align: left;
-    padding: 8px 8px 8px 0;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .manual-entries td {
-    padding: 6px 8px 6px 0;
-    vertical-align: top;
-    position: relative;
-  }
-
-  .manual-entries input {
-    font-size: 14px;
-    padding: 8px 10px;
-  }
-
-  .manual-entries .row-num {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    color: var(--border-strong);
-    padding-top: 14px;
-    width: 30px;
-  }
-
-  .manual-entries .col-actions {
-    width: 40px;
-    text-align: center;
-  }
-
-  .remove-row-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--text-muted);
-    font-size: 18px;
-    padding: 6px;
-    border-radius: 4px;
-    transition: all 0.15s;
-    margin-top: 4px;
-  }
-
-  .remove-row-btn:hover {
-    background: var(--danger-light);
-    color: var(--danger);
-  }
-
-  .qty-input {
-    width: 70px !important;
-  }
+  /* ---- Checkbox rows ---- */
+  .checkbox-row { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
+  .checkbox-row input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; flex-shrink: 0; }
+  .checkbox-row label { margin: 0; font-size: 14px; font-weight: 500; color: var(--text); cursor: pointer; }
+  .checkboxes-group { display: flex; flex-direction: column; gap: 4px; margin-top: 12px; }
+  .checkboxes-group .checkbox-row { margin-top: 0; }
 
   .hidden { display: none !important; }
-
-  #printFrame {
-    display: none;
-  }
+  #printFrame { display: none; }
 
   @media (max-width: 700px) {
-    .form-row, .form-row.two-col, .form-row.four-col {
-      grid-template-columns: 1fr;
-    }
+    .form-row, .form-row.four-col { grid-template-columns: 1fr; }
     .template-toggle { flex-direction: column; }
     .actions { flex-direction: column; }
     .btn { justify-content: center; }
     .preview-grid { grid-template-columns: 1fr; }
-    .manual-entries { font-size: 13px; }
   }
 </style>
 </head>
 <body>
 
-<!-- Hidden print frame -->
 <div id="printFrame"><pre id="printContent"></pre></div>
 
 <header class="app-header">
@@ -709,9 +206,8 @@
 <!-- ============================================================ -->
 <div id="page-harvest" class="page active">
 
-  <!-- Step 1 -->
   <div class="card">
-    <div class="card-title"><span class="step">1</span> Mouse Range, Date &amp; Project</div>
+    <div class="card-title"><span class="step">1</span> Mouse Range, Date, &amp; Project</div>
     <div class="form-row four-col">
       <div>
         <label for="asStart">First AS Number</label>
@@ -731,12 +227,22 @@
       </div>
       <div class="form-group">
         <label for="projectName">Project Name <span style="font-weight:400;color:var(--border-strong)">(optional)</span></label>
-        <input type="text" id="projectName" placeholder="e.g. INK-ATTAC">
+        <input type="text" id="projectName" placeholder="e.g. INK-ATTAC" oninput="updateCharCounter(this, 'projectNameCounter')">
+        <div class="char-counter" id="projectNameCounter"></div>
+      </div>
+    </div>
+    <div class="checkboxes-group">
+      <div class="checkbox-row">
+        <input type="checkbox" id="includeDateOnLabel" checked>
+        <label for="includeDateOnLabel">Include date on labels</label>
+      </div>
+      <div class="checkbox-row">
+        <input type="checkbox" id="printProjectOnLabel">
+        <label for="printProjectOnLabel">Print project name on labels (4th line)</label>
       </div>
     </div>
   </div>
 
-  <!-- Step 2 -->
   <div class="card">
     <div class="card-title"><span class="step">2</span> Sample Labels</div>
     <div class="template-toggle">
@@ -745,27 +251,30 @@
     </div>
 
     <div id="standardInfo" class="info-box" style="margin-top:0">
-      Uses the standard harvest template: <strong>Plasma ×3</strong>, <strong>LFemur+L4-6</strong>, <strong>LTibia+L1-3</strong>, <strong>RFem+RTib</strong>, <strong>Met</strong>, <strong>Dia</strong>, <strong>Vert</strong>, <strong>Met/Dia</strong>, <strong>Vert</strong> — 11 labels per mouse, printed 3-across on 4 physical labels (12th slot blank).
+      Uses the standard harvest template: <strong>Plasma ×3</strong>, <strong>LFemur+L4-6</strong>, <strong>LTibia+L1-3</strong>, <strong>RFem+RTib</strong>, <strong>Met</strong>, <strong>Dia</strong>, <strong>Vert</strong>, <strong>Met</strong>, <strong>Dia</strong>, <strong>Vert</strong>, <strong>Met/Dia</strong>, <strong>Vert</strong> — 14 labels per mouse, printed 3-across on 5 physical labels (15th slot blank).
     </div>
 
     <div id="customSection" class="hidden">
+      <div style="margin-bottom:12px">
+        <button class="btn btn-sm btn-outline" onclick="loadStandardToCustom()">Load Standard Template</button>
+        <span style="font-size:12px;color:var(--text-muted);margin-left:8px">Pre-fill with standard labels for editing</span>
+      </div>
       <div class="label-chips" id="chipContainer"></div>
       <div class="add-label-row">
-        <input type="text" id="newLabelInput" placeholder="Enter sample label name…" oninput="updateNewLabelCounter()" onkeydown="if(event.key==='Enter')addCustomLabel()">
+        <div class="form-group" style="flex:1">
+          <input type="text" id="newLabelInput" placeholder="Enter sample label name…" oninput="updateCharCounter(this, 'newLabelCounter')" onkeydown="if(event.key==='Enter')addCustomLabel()">
+          <div class="char-counter" id="newLabelCounter"></div>
+        </div>
         <button class="btn btn-sm btn-outline" onclick="addCustomLabel()">+ Add</button>
         <button class="btn btn-sm btn-outline" onclick="addBlankLabel()">+ Blank</button>
         <button class="btn btn-sm btn-danger-outline" onclick="clearCustomLabels()">Clear</button>
       </div>
-      <div id="newLabelWarn" class="hidden" style="margin-top:8px;font-size:12px;color:var(--warn);font-weight:500">
-        ⚠ Text may be too long — labels can fit ~18 characters per line.
-      </div>
       <div class="info-box">
-        Add individual sample labels. Use <strong>+ Blank</strong> for a label with just the AS number and date. Labels are grouped 3 per physical label.
+        Add individual sample labels. Use <strong>+ Blank</strong> for a label with just the AS number and date. Labels are grouped 3 per physical label. Click a label name to edit it. Drag labels to reorder.
       </div>
     </div>
   </div>
 
-  <!-- Step 3 -->
   <div class="card">
     <div class="card-title"><span class="step">3</span> Generate &amp; Print</div>
     <div class="actions">
@@ -782,14 +291,11 @@
         Download .txt
       </button>
     </div>
-
     <div class="info-box" style="margin-top:12px">
       <strong>Print to Zebra</strong> opens the browser print dialog — select your Zebra printer and print.<br>
       <strong>Download .txt</strong> saves a text file you can open in Notepad and print via File → Print.
     </div>
-
     <div id="harvestStatus" class="status-bar"></div>
-
     <div class="preview-section" id="harvestPreview" style="display:none">
       <div class="preview-header">
         <div class="card-title" style="margin:0;border:none;padding:0">Label Preview</div>
@@ -802,7 +308,6 @@
       </details>
     </div>
   </div>
-
 </div>
 
 <!-- ============================================================ -->
@@ -810,23 +315,33 @@
 <!-- ============================================================ -->
 <div id="page-manual" class="page">
 
-  <!-- Entries -->
   <div class="card">
     <div class="card-title"><span class="step">1</span> Create Labels</div>
     <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px">
       Enter any text for Line 1 and Line 2 of each label. Date is shared across all labels. Set Qty to print multiples of the same label. Labels are grouped 3-across per physical label.
     </p>
 
-    <div class="form-row" style="margin-bottom:20px">
+    <div class="form-row" style="margin-bottom:8px">
       <div>
         <label for="manualDate">Date</label>
         <input type="date" id="manualDate">
       </div>
       <div class="form-group">
         <label for="manualProject">Project Name <span style="font-weight:400;color:var(--border-strong)">(optional)</span></label>
-        <input type="text" id="manualProject" placeholder="e.g. INK-ATTAC">
+        <input type="text" id="manualProject" placeholder="e.g. INK-ATTAC" oninput="updateCharCounter(this, 'manualProjectCounter')">
+        <div class="char-counter" id="manualProjectCounter"></div>
       </div>
       <div></div>
+    </div>
+    <div class="checkboxes-group" style="margin-top:0;margin-bottom:20px">
+      <div class="checkbox-row">
+        <input type="checkbox" id="manualIncludeDateOnLabel" checked>
+        <label for="manualIncludeDateOnLabel">Include date on labels</label>
+      </div>
+      <div class="checkbox-row">
+        <input type="checkbox" id="manualPrintProjectOnLabel">
+        <label for="manualPrintProjectOnLabel">Print project name on labels (4th line)</label>
+      </div>
     </div>
 
     <table class="manual-entries">
@@ -839,17 +354,14 @@
           <th style="width:40px"></th>
         </tr>
       </thead>
-      <tbody id="manualTableBody">
-      </tbody>
+      <tbody id="manualTableBody"></tbody>
     </table>
-
     <div style="display:flex;gap:8px">
       <button class="btn btn-sm btn-outline" onclick="addManualRow()">+ Add Row</button>
       <button class="btn btn-sm btn-danger-outline" onclick="clearManualRows()">Clear All</button>
     </div>
   </div>
 
-  <!-- Generate & Print -->
   <div class="card">
     <div class="card-title"><span class="step">2</span> Generate &amp; Print</div>
     <div class="actions">
@@ -866,14 +378,11 @@
         Download .txt
       </button>
     </div>
-
     <div class="info-box" style="margin-top:12px">
       <strong>Print to Zebra</strong> opens the browser print dialog — select your Zebra printer and print.<br>
       <strong>Download .txt</strong> saves a text file you can open in Notepad and print via File → Print.
     </div>
-
     <div id="manualStatus" class="status-bar"></div>
-
     <div class="preview-section" id="manualPreview" style="display:none">
       <div class="preview-header">
         <div class="card-title" style="margin:0;border:none;padding:0">Label Preview</div>
@@ -886,18 +395,19 @@
       </details>
     </div>
   </div>
-
 </div>
+
 </div><!-- /container -->
 
 <script>
   /* ======== Constants ======== */
-  const MAX_CHARS = 18;
+  const MAX_CHARS = 13;
   const X_POS = [240, 440, 640];
 
   const STANDARD_LABELS = [
     'Plasma', 'Plasma', 'Plasma',
     'LFemur+L4-6', 'LTibia+L1-3', 'RFem+RTib',
+    'Met', 'Dia', 'Vert',
     'Met', 'Dia', 'Vert',
     'Met/Dia', 'Vert', ''
   ];
@@ -906,13 +416,12 @@
   let harvestMode = 'standard';
   let currentZPL = '';
   let manualRowId = 0;
+  let dragSrcIndex = null;
 
   /* ======== Init ======== */
   document.getElementById('labelDate').valueAsDate = new Date();
   document.getElementById('manualDate').valueAsDate = new Date();
-  addManualRow();
-  addManualRow();
-  addManualRow();
+  addManualRow(); addManualRow(); addManualRow();
 
   /* ======== Page navigation ======== */
   function showPage(page) {
@@ -920,6 +429,42 @@
     document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
     document.getElementById(`page-${page}`).classList.add('active');
     document.querySelectorAll('.nav-tab')[page === 'harvest' ? 0 : 1].classList.add('active');
+  }
+
+  /* ======== Shared: character counter ======== */
+  function updateCharCounter(input, counterId) {
+    const counter = document.getElementById(counterId);
+    const len = input.value.length;
+    if (len > MAX_CHARS) {
+      counter.textContent = `${len}/${MAX_CHARS} — may not fit`;
+      counter.className = 'char-counter over';
+      input.classList.add('input-warn');
+    } else if (len > MAX_CHARS - 3) {
+      counter.textContent = `${len}/${MAX_CHARS}`;
+      counter.className = 'char-counter near';
+      input.classList.remove('input-warn');
+    } else {
+      counter.className = 'char-counter';
+      input.classList.remove('input-warn');
+    }
+  }
+
+  /* Inline counter for manual table cells — uses sibling element */
+  function checkManualLen(input) {
+    const counter = input.parentElement.querySelector('.char-counter');
+    const len = input.value.length;
+    if (len > MAX_CHARS) {
+      counter.textContent = `${len}/${MAX_CHARS} — may not fit`;
+      counter.className = 'char-counter over';
+      input.classList.add('input-warn');
+    } else if (len > MAX_CHARS - 3) {
+      counter.textContent = `${len}/${MAX_CHARS}`;
+      counter.className = 'char-counter near';
+      input.classList.remove('input-warn');
+    } else {
+      counter.className = 'char-counter';
+      input.classList.remove('input-warn');
+    }
   }
 
   /* ======== Harvest: mode toggle ======== */
@@ -931,49 +476,107 @@
     document.getElementById('customSection').classList.toggle('hidden', m !== 'custom');
   }
 
-  /* ======== Harvest: custom label chips ======== */
+  /* ======== Harvest: custom label management ======== */
   function addCustomLabel() {
     const input = document.getElementById('newLabelInput');
     const val = input.value.trim();
     if (!val) return;
     customLabels.push(val);
     input.value = '';
-    updateNewLabelCounter();
+    updateCharCounter(input, 'newLabelCounter');
     renderChips();
     input.focus();
   }
 
-  function addBlankLabel() {
-    customLabels.push('');
-    renderChips();
-  }
+  function addBlankLabel() { customLabels.push(''); renderChips(); }
 
-  function removeCustomLabel(i) {
-    customLabels.splice(i, 1);
-    renderChips();
-  }
+  function removeCustomLabel(i) { customLabels.splice(i, 1); renderChips(); }
 
-  function clearCustomLabels() {
-    customLabels = [];
-    renderChips();
-  }
+  function clearCustomLabels() { customLabels = []; renderChips(); }
 
+  function loadStandardToCustom() { customLabels = [...STANDARD_LABELS]; renderChips(); }
+
+  /* ======== Chip rendering with drag-drop & click-to-edit ======== */
   function renderChips() {
     const container = document.getElementById('chipContainer');
-    container.innerHTML = customLabels.map((l, i) => {
+    container.innerHTML = '';
+    customLabels.forEach((l, i) => {
+      const chip = document.createElement('span');
       const isBlank = l === '';
       const isLong = l.length > MAX_CHARS;
-      let cls = 'chip';
-      if (isBlank) cls += ' blank-chip';
-      else if (isLong) cls += ' warn-chip';
-      const display = isBlank ? '(blank)' : escHtml(l) + (isLong ? ' ⚠' : '');
-      return `<span class="${cls}">${display}<button class="remove" onclick="removeCustomLabel(${i})" title="Remove">×</button></span>`;
-    }).join('');
+      chip.className = 'chip' + (isBlank ? ' blank-chip' : '') + (isLong && !isBlank ? ' warn-chip' : '');
+      chip.draggable = true;
+      chip.dataset.index = i;
+
+      const textSpan = document.createElement('span');
+      textSpan.className = 'chip-text';
+      textSpan.textContent = isBlank ? '(blank)' : l + (isLong ? ' ⚠' : '');
+      textSpan.title = 'Click to edit';
+      textSpan.addEventListener('click', () => startEditChip(i, chip, textSpan));
+      chip.appendChild(textSpan);
+
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'remove';
+      removeBtn.textContent = '×';
+      removeBtn.title = 'Remove';
+      removeBtn.addEventListener('click', (e) => { e.stopPropagation(); removeCustomLabel(i); });
+      chip.appendChild(removeBtn);
+
+      // Drag events
+      chip.addEventListener('dragstart', (e) => {
+        dragSrcIndex = i;
+        chip.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+      });
+      chip.addEventListener('dragend', () => {
+        chip.classList.remove('dragging');
+        container.querySelectorAll('.chip').forEach(c => c.classList.remove('drag-over'));
+        dragSrcIndex = null;
+      });
+      chip.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        chip.classList.add('drag-over');
+      });
+      chip.addEventListener('dragleave', () => chip.classList.remove('drag-over'));
+      chip.addEventListener('drop', (e) => {
+        e.preventDefault();
+        chip.classList.remove('drag-over');
+        const targetIndex = parseInt(chip.dataset.index);
+        if (dragSrcIndex !== null && dragSrcIndex !== targetIndex) {
+          const item = customLabels.splice(dragSrcIndex, 1)[0];
+          customLabels.splice(targetIndex, 0, item);
+          renderChips();
+        }
+      });
+
+      container.appendChild(chip);
+    });
   }
 
-  function updateNewLabelCounter() {
-    const val = document.getElementById('newLabelInput').value;
-    document.getElementById('newLabelWarn').classList.toggle('hidden', val.length <= MAX_CHARS);
+  function startEditChip(index, chip, textSpan) {
+    const current = customLabels[index];
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'chip-edit-input';
+    input.value = current;
+    input.style.width = Math.max(80, current.length * 9 + 20) + 'px';
+
+    function commitEdit() {
+      const newVal = input.value.trim();
+      customLabels[index] = newVal;
+      renderChips();
+    }
+
+    input.addEventListener('blur', commitEdit);
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); commitEdit(); }
+      if (e.key === 'Escape') { renderChips(); }
+    });
+
+    textSpan.replaceWith(input);
+    input.focus();
+    input.select();
   }
 
   /* ======== Manual: row management ======== */
@@ -986,11 +589,11 @@
       <td class="row-num">${tbody.children.length + 1}</td>
       <td class="form-group">
         <input type="text" class="m-line1" value="${escAttr(line1 || '')}" placeholder="e.g. AS2243" oninput="checkManualLen(this)">
-        <span class="char-counter hidden"></span>
+        <div class="char-counter"></div>
       </td>
       <td class="form-group">
         <input type="text" class="m-line2" value="${escAttr(line2 || '')}" placeholder="e.g. Plasma" oninput="checkManualLen(this)">
-        <span class="char-counter hidden"></span>
+        <div class="char-counter"></div>
       </td>
       <td><input type="number" class="m-qty qty-input" value="${qty || 1}" min="1" max="999"></td>
       <td class="col-actions"><button class="remove-row-btn" onclick="removeManualRow(${id})" title="Remove row">×</button></td>`;
@@ -998,51 +601,13 @@
     renumberManualRows();
   }
 
-  function removeManualRow(id) {
-    const row = document.getElementById(`mrow-${id}`);
-    if (row) row.remove();
-    renumberManualRows();
-  }
-
-  function clearManualRows() {
-    document.getElementById('manualTableBody').innerHTML = '';
-    manualRowId = 0;
-    addManualRow();
-  }
-
-  function renumberManualRows() {
-    document.querySelectorAll('#manualTableBody tr').forEach((tr, i) => {
-      tr.querySelector('.row-num').textContent = i + 1;
-    });
-  }
-
-  function checkManualLen(input) {
-    const counter = input.parentElement.querySelector('.char-counter');
-    const len = input.value.length;
-    if (len > MAX_CHARS) {
-      counter.textContent = `${len}/${MAX_CHARS}`;
-      counter.className = 'char-counter over';
-      input.classList.add('input-warn');
-    } else if (len > MAX_CHARS - 4) {
-      counter.textContent = `${len}/${MAX_CHARS}`;
-      counter.className = 'char-counter near';
-      input.classList.remove('input-warn');
-    } else {
-      counter.className = 'char-counter hidden';
-      input.classList.remove('input-warn');
-    }
-  }
+  function removeManualRow(id) { const r = document.getElementById(`mrow-${id}`); if (r) r.remove(); renumberManualRows(); }
+  function clearManualRows() { document.getElementById('manualTableBody').innerHTML = ''; manualRowId = 0; addManualRow(); }
+  function renumberManualRows() { document.querySelectorAll('#manualTableBody tr').forEach((tr, i) => { tr.querySelector('.row-num').textContent = i + 1; }); }
 
   /* ======== Shared utilities ======== */
-  function escHtml(s) {
-    const d = document.createElement('div');
-    d.textContent = s;
-    return d.innerHTML;
-  }
-
-  function escAttr(s) {
-    return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  }
+  function escHtml(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+  function escAttr(s) { return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
   function formatDate(dateStr) {
     if (!dateStr) return '';
@@ -1053,24 +618,21 @@
   function formatDateYMD(dateStr) {
     if (!dateStr) return '';
     const d = new Date(dateStr + 'T00:00:00');
-    const y = d.getFullYear();
-    const m = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${y}${m}${day}`;
+    return `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
   }
 
-  function sanitizeFilename(s) {
-    return s.replace(/[^a-zA-Z0-9_\-. ]/g, '').replace(/\s+/g, '_');
-  }
+  function sanitizeFilename(s) { return s.replace(/[^a-zA-Z0-9_\-. ]/g, '').replace(/\s+/g, '_'); }
 
   /**
-   * Build ZPL for a list of individual label entries.
+   * Build ZPL for a list of entries.
    * Each entry: { line1, line2 }
-   * Groups them 3-across per physical label.
-   * Returns array of { zpl, cells: [{line1,line2},...] , date }
+   * Groups 3-across per physical label.
+   * dateStr: shown on line 3 (or empty if date excluded).
+   * projectName: optional 4th line.
    */
-  function buildZPL(entries, dateStr) {
+  function buildZPL(entries, dateStr, projectName) {
     const blocks = [];
+    const proj = projectName || '';
     for (let i = 0; i < entries.length; i += 3) {
       const group = entries.slice(i, i + 3);
       while (group.length < 3) group.push({ line1: '', line2: '' });
@@ -1084,9 +646,13 @@
       zpl += `^FS^FO${X_POS[0]},80^AD^FD${dateStr}`;
       zpl += `^FS^FO${X_POS[1]},80^AD^FD${dateStr}`;
       zpl += `^FS^FO${X_POS[2]},80^AD^FD${dateStr}`;
+      if (proj) {
+        zpl += `^FS^FO${X_POS[0]},110^AD^FD${proj}`;
+        zpl += `^FS^FO${X_POS[1]},110^AD^FD${proj}`;
+        zpl += `^FS^FO${X_POS[2]},110^AD^FD${proj}`;
+      }
       zpl += '^FS^XZ';
-
-      blocks.push({ zpl, cells: group, date: dateStr });
+      blocks.push({ zpl, cells: group, date: dateStr, project: proj });
     }
     return blocks;
   }
@@ -1096,10 +662,16 @@
       const cells = b.cells.map(c => {
         const l1over = c.line1.length > MAX_CHARS ? ' overflow' : '';
         const l2cls = c.line2 === '' ? 'line2 blank' : (c.line2.length > MAX_CHARS ? 'line2 overflow' : 'line2');
+        let dateHtml = b.date ? `<div class="date">${escHtml(b.date)}</div>` : '';
+        let projHtml = '';
+        if (b.project) {
+          const pCls = b.project.length > MAX_CHARS ? 'line4 overflow' : 'line4';
+          projHtml = `<div class="${pCls}">${escHtml(b.project)}</div>`;
+        }
         return `<div class="label-cell">
           <div class="line1${l1over}">${c.line1 ? escHtml(c.line1) : '&nbsp;'}</div>
           <div class="${l2cls}">${c.line2 ? escHtml(c.line2) : '&nbsp;'}</div>
-          <div class="date">${escHtml(b.date)}</div>
+          ${dateHtml}${projHtml}
         </div>`;
       }).join('');
       return `<div class="label-preview"><span class="label-index">#${idx + 1}</span><div class="label-row">${cells}</div></div>`;
@@ -1107,8 +679,7 @@
   }
 
   function checkLengthWarnings(entries) {
-    const long = entries.filter(e => e.line1.length > MAX_CHARS || e.line2.length > MAX_CHARS);
-    return long.length;
+    return entries.filter(e => e.line1.length > MAX_CHARS || e.line2.length > MAX_CHARS).length;
   }
 
   /* ======== Harvest: generate ======== */
@@ -1116,42 +687,44 @@
     const startNum = parseInt(document.getElementById('asStart').value);
     const endNum = parseInt(document.getElementById('asEnd').value);
     const dateVal = document.getElementById('labelDate').value;
+    const includeDate = document.getElementById('includeDateOnLabel').checked;
+    const projOnLabel = document.getElementById('printProjectOnLabel').checked;
+    const projName = document.getElementById('projectName').value.trim();
 
     if (isNaN(startNum)) return showHarvestStatus('Please enter a starting AS number.', 'error');
     const effectiveEnd = isNaN(endNum) ? startNum : endNum;
     if (effectiveEnd < startNum) return showHarvestStatus('Last AS number must be ≥ first AS number.', 'error');
     if (!dateVal) return showHarvestStatus('Please select a date.', 'error');
+    if (projOnLabel && !projName) return showHarvestStatus('Please enter a project name or uncheck "Print project name on labels".', 'error');
 
     const sampleNames = harvestMode === 'standard' ? [...STANDARD_LABELS] : [...customLabels];
     if (sampleNames.length === 0) return showHarvestStatus('Please add at least one sample label.', 'error');
 
-    const dateStr = formatDate(dateVal);
+    const dateStr = includeDate ? formatDate(dateVal) : '';
     let allEntries = [];
-
     for (let n = startNum; n <= effectiveEnd; n++) {
       const asId = `AS${n}`;
       sampleNames.forEach(s => allEntries.push({ line1: asId, line2: s }));
     }
 
-    const blocks = buildZPL(allEntries, dateStr);
+    const blocks = buildZPL(allEntries, dateStr, projOnLabel ? projName : '');
     currentZPL = blocks.map(b => b.zpl).join('\n');
     document.getElementById('printContent').textContent = currentZPL;
-
     renderPreview(blocks, document.getElementById('harvestPreviewGrid'));
 
     const mouseCount = effectiveEnd - startNum + 1;
-    document.getElementById('harvestLabelCount').textContent =
-      `${blocks.length} physical labels for ${mouseCount} mouse${mouseCount > 1 ? 's' : ''}`;
-
+    document.getElementById('harvestLabelCount').textContent = `${blocks.length} physical ${blocks.length > 1 ? 'labels' : 'label'} for ${mouseCount} ${mouseCount > 1 ? 'mice' : 'mouse'}`;
     document.getElementById('harvestZplOutput').textContent = currentZPL;
     document.getElementById('harvestPreview').style.display = '';
     document.getElementById('btnHarvestDownload').disabled = false;
     document.getElementById('btnHarvestPrint').disabled = false;
 
     const longCount = checkLengthWarnings(allEntries);
-    let msg = `Generated ${blocks.length} labels for AS${startNum}${effectiveEnd !== startNum ? ' – AS' + effectiveEnd : ''}.`;
-    if (longCount > 0) {
-      msg += ` ⚠ ${longCount} label${longCount > 1 ? 's have' : ' has'} text longer than ${MAX_CHARS} characters and may not fit.`;
+    const projLong = projOnLabel && projName.length > MAX_CHARS;
+    let msg = `Generated ${blocks.length} ${blocks.length > 1 ? 'labels' : 'label'} for AS${startNum}${effectiveEnd !== startNum ? ' – AS' + effectiveEnd : ''}.`;
+    if (longCount > 0 || projLong) {
+      if (longCount > 0) msg += ` ⚠ ${longCount} label${longCount > 1 ? 's have' : ' has'} text longer than ${MAX_CHARS} characters and may not fit.`;
+      if (projLong) msg += ` ⚠ Project name (${projName.length} chars) may not fit.`;
       showHarvestStatus(msg, 'warn');
     } else {
       showHarvestStatus(msg, 'success');
@@ -1161,12 +734,16 @@
   /* ======== Manual: generate ======== */
   function generateManualLabels() {
     const dateVal = document.getElementById('manualDate').value;
+    const includeDate = document.getElementById('manualIncludeDateOnLabel').checked;
+    const projOnLabel = document.getElementById('manualPrintProjectOnLabel').checked;
+    const projName = document.getElementById('manualProject').value.trim();
+
     if (!dateVal) return showManualStatus('Please select a date.', 'error');
+    if (projOnLabel && !projName) return showManualStatus('Please enter a project name or uncheck "Print project name on labels".', 'error');
 
     const rows = document.querySelectorAll('#manualTableBody tr');
     let allEntries = [];
     let hasContent = false;
-
     rows.forEach(tr => {
       const l1 = tr.querySelector('.m-line1').value;
       const l2 = tr.querySelector('.m-line2').value;
@@ -1176,25 +753,25 @@
         for (let i = 0; i < qty; i++) allEntries.push({ line1: l1, line2: l2 });
       }
     });
-
     if (!hasContent) return showManualStatus('Please fill in at least one label row.', 'error');
 
-    const dateStr = formatDate(dateVal);
-    const blocks = buildZPL(allEntries, dateStr);
+    const dateStr = includeDate ? formatDate(dateVal) : '';
+    const blocks = buildZPL(allEntries, dateStr, projOnLabel ? projName : '');
     currentZPL = blocks.map(b => b.zpl).join('\n');
     document.getElementById('printContent').textContent = currentZPL;
-
     renderPreview(blocks, document.getElementById('manualPreviewGrid'));
-    document.getElementById('manualLabelCount').textContent = `${blocks.length} physical labels (${allEntries.length} individual labels)`;
+    document.getElementById('manualLabelCount').textContent = `${blocks.length} physical ${blocks.length > 1 ? 'labels' : 'label'} (${allEntries.length} individual ${allEntries.length > 1 ? 'labels' : 'label'})`;
     document.getElementById('manualZplOutput').textContent = currentZPL;
     document.getElementById('manualPreview').style.display = '';
     document.getElementById('btnManualDownload').disabled = false;
     document.getElementById('btnManualPrint').disabled = false;
 
     const longCount = checkLengthWarnings(allEntries);
-    let msg = `Generated ${blocks.length} physical labels (${allEntries.length} individual labels).`;
-    if (longCount > 0) {
-      msg += ` ⚠ ${longCount} label${longCount > 1 ? 's have' : ' has'} text longer than ${MAX_CHARS} characters and may not fit.`;
+    const projLong = projOnLabel && projName.length > MAX_CHARS;
+    let msg = `Generated ${blocks.length} physical ${blocks.length > 1 ? 'labels' : 'label'} (${allEntries.length} individual ${allEntries.length > 1 ? 'labels' : 'label'}).`;
+    if (longCount > 0 || projLong) {
+      if (longCount > 0) msg += ` ⚠ ${longCount} label${longCount > 1 ? 's have' : ' has'} text longer than ${MAX_CHARS} characters and may not fit.`;
+      if (projLong) msg += ` ⚠ Project name (${projName.length} chars) may not fit.`;
       showManualStatus(msg, 'warn');
     } else {
       showManualStatus(msg, 'success');
@@ -1202,14 +779,10 @@
   }
 
   /* ======== Print & Download ======== */
-  function printLabels() {
-    if (!currentZPL) return;
-    window.print();
-  }
+  function printLabels() { if (currentZPL) window.print(); }
 
   function downloadFile(source) {
     if (!currentZPL) return;
-
     let parts = [];
     if (source === 'harvest') {
       const proj = document.getElementById('projectName').value.trim();
@@ -1226,7 +799,6 @@
       if (proj) parts.push(sanitizeFilename(proj));
       parts.push('manual_labels');
     }
-
     const filename = parts.join('_') + '.txt';
     const blob = new Blob([currentZPL], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
@@ -1235,24 +807,12 @@
     a.download = filename;
     a.click();
     URL.revokeObjectURL(url);
-
     const statusFn = source === 'harvest' ? showHarvestStatus : showManualStatus;
     statusFn(`Downloaded "${filename}" — open in Notepad and print via File → Print.`, 'success');
   }
 
-  /* ======== Status helpers ======== */
-  function showHarvestStatus(msg, type) {
-    const bar = document.getElementById('harvestStatus');
-    bar.textContent = msg;
-    bar.className = `status-bar ${type}`;
-  }
-
-  function showManualStatus(msg, type) {
-    const bar = document.getElementById('manualStatus');
-    bar.textContent = msg;
-    bar.className = `status-bar ${type}`;
-  }
+  function showHarvestStatus(msg, type) { const b = document.getElementById('harvestStatus'); b.textContent = msg; b.className = `status-bar ${type}`; }
+  function showManualStatus(msg, type) { const b = document.getElementById('manualStatus'); b.textContent = msg; b.className = `status-bar ${type}`; }
 </script>
-
 </body>
 </html>

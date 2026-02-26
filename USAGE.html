@@ -8,131 +8,29 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #f0f0ec;
-    --surface: #ffffff;
-    --border: #d4d4cd;
-    --text: #1a1a18;
-    --text-muted: #6b6b63;
-    --accent: #2d5a27;
-    --accent-light: #e8f0e6;
-    --radius: 6px;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: 'IBM Plex Sans', -apple-system, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.7;
-    font-size: 15px;
-  }
-  .header {
-    background: var(--text);
-    color: var(--bg);
-    padding: 20px 0;
-    border-bottom: 3px solid var(--accent);
-  }
-  .header .inner {
-    max-width: 780px;
-    margin: 0 auto;
-    padding: 0 24px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-  .header .logo {
-    width: 36px; height: 36px;
-    background: var(--accent);
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px; flex-shrink: 0;
-  }
-  .header h1 {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 18px; font-weight: 600;
-  }
-  .header a {
-    margin-left: auto;
-    color: #999; text-decoration: none; font-size: 13px;
-    transition: color 0.15s;
-  }
-  .header a:hover { color: #fff; }
-  .container {
-    max-width: 780px;
-    margin: 0 auto;
-    padding: 32px 24px 64px 24px;
-  }
-  h2 {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 20px; font-weight: 600;
-    margin-top: 40px; margin-bottom: 12px;
-    padding-bottom: 8px;
-    border-bottom: 2px solid var(--accent);
-    color: var(--text);
-  }
-  h3 {
-    font-size: 16px; font-weight: 600;
-    margin-top: 28px; margin-bottom: 8px;
-    color: var(--text);
-  }
-  h4 {
-    font-size: 14px; font-weight: 600;
-    margin-top: 20px; margin-bottom: 6px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  p { margin-bottom: 12px; }
-  ul, ol {
-    margin-bottom: 12px;
-    padding-left: 24px;
-  }
-  li { margin-bottom: 6px; }
-  strong { font-weight: 600; }
-  code {
-    font-family: 'IBM Plex Mono', monospace;
-    background: var(--accent-light);
-    padding: 1px 6px;
-    border-radius: 3px;
-    font-size: 13px;
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 12px 0 20px 0;
-    font-size: 14px;
-  }
-  th {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px; font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    text-align: left;
-    padding: 8px 12px;
-    background: var(--accent-light);
-    border: 1px solid var(--border);
-    color: var(--accent);
-  }
-  td {
-    padding: 8px 12px;
-    border: 1px solid var(--border);
-    background: var(--surface);
-  }
-  hr {
-    border: none;
-    border-top: 1px solid var(--border);
-    margin: 32px 0;
-  }
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--accent);
-    border-radius: 0 var(--radius) var(--radius) 0;
-    padding: 14px 18px;
-    margin: 16px 0;
-    font-size: 14px;
-    color: var(--text-muted);
-  }
+  :root { --bg:#f0f0ec; --surface:#ffffff; --border:#d4d4cd; --text:#1a1a18; --text-muted:#6b6b63; --accent:#2d5a27; --accent-light:#e8f0e6; --radius:6px; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'IBM Plex Sans',-apple-system,sans-serif; background:var(--bg); color:var(--text); line-height:1.7; font-size:15px; }
+  .header { background:var(--text); color:var(--bg); padding:20px 0; border-bottom:3px solid var(--accent); }
+  .header .inner { max-width:780px; margin:0 auto; padding:0 24px; display:flex; align-items:center; gap:16px; }
+  .header .logo { width:36px; height:36px; background:var(--accent); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+  .header h1 { font-family:'IBM Plex Mono',monospace; font-size:18px; font-weight:600; }
+  .header a { margin-left:auto; color:#999; text-decoration:none; font-size:13px; transition:color 0.15s; }
+  .header a:hover { color:#fff; }
+  .container { max-width:780px; margin:0 auto; padding:32px 24px 64px 24px; }
+  h2 { font-family:'IBM Plex Mono',monospace; font-size:20px; font-weight:600; margin-top:40px; margin-bottom:12px; padding-bottom:8px; border-bottom:2px solid var(--accent); }
+  h3 { font-size:16px; font-weight:600; margin-top:28px; margin-bottom:8px; }
+  h4 { font-size:14px; font-weight:600; margin-top:20px; margin-bottom:6px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; }
+  p { margin-bottom:12px; }
+  ul, ol { margin-bottom:12px; padding-left:24px; }
+  li { margin-bottom:6px; }
+  strong { font-weight:600; }
+  code { font-family:'IBM Plex Mono',monospace; background:var(--accent-light); padding:1px 6px; border-radius:3px; font-size:13px; }
+  table { width:100%; border-collapse:collapse; margin:12px 0 20px 0; font-size:14px; }
+  th { font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; text-align:left; padding:8px 12px; background:var(--accent-light); border:1px solid var(--border); color:var(--accent); }
+  td { padding:8px 12px; border:1px solid var(--border); background:var(--surface); }
+  hr { border:none; border-top:1px solid var(--border); margin:32px 0; }
+  .card { background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:0 var(--radius) var(--radius) 0; padding:14px 18px; margin:16px 0; font-size:14px; color:var(--text-muted); }
 </style>
 </head>
 <body>
@@ -159,13 +57,16 @@
 <h2>Harvest Labels</h2>
 <p>Use this mode when processing mice and you need the standard set of sample labels for each mouse.</p>
 
-<h3>Step 1: Mouse Range, Date &amp; Project</h3>
+<h3>Step 1: Mouse Range, Date, &amp; Project</h3>
 <ul>
   <li><strong>First AS Number</strong> — Enter the number (without the "AS" prefix) of the first mouse. For example, enter <code>2243</code> for AS2243.</li>
   <li><strong>Last AS Number</strong> — Enter the last mouse number in the range. Leave blank if printing labels for a single mouse.</li>
-  <li><strong>Date</strong> — Defaults to today. This date prints on every label.</li>
+  <li><strong>Date</strong> — Defaults to today. This date prints on every label (unless unchecked — see below).</li>
   <li><strong>Project Name</strong> — Optional. If provided, it will be included in the downloaded filename (e.g., <code>20260226_INK-ATTAC_AS2243-AS2250.txt</code>).</li>
+  <li><strong>Include date on labels</strong> — Checked by default. Uncheck to omit the date line from all labels.</li>
+  <li><strong>Print project name on labels (4th line)</strong> — When checked, the project name is printed as a fourth line on every label.</li>
 </ul>
+<div class="card">A character counter appears next to the project name field as you approach or exceed the 13-character limit. Text longer than 13 characters may not fit within a label column.</div>
 
 <h3>Step 2: Sample Labels</h3>
 <p>Choose one of two options:</p>
@@ -182,22 +83,27 @@
     <tr><td>7</td><td>Met</td></tr>
     <tr><td>8</td><td>Dia</td></tr>
     <tr><td>9</td><td>Vert</td></tr>
-    <tr><td>10</td><td>Met/Dia</td></tr>
-    <tr><td>11</td><td>Vert</td></tr>
-    <tr><td>12</td><td>(blank)</td></tr>
+    <tr><td>10</td><td>Met</td></tr>
+    <tr><td>11</td><td>Dia</td></tr>
+    <tr><td>12</td><td>Vert</td></tr>
+    <tr><td>13</td><td>Met/Dia</td></tr>
+    <tr><td>14</td><td>Vert</td></tr>
+    <tr><td>15</td><td>(blank)</td></tr>
   </tbody>
 </table>
-<p>These are printed 3-across, resulting in 4 physical labels per mouse.</p>
+<p>These are printed 3-across, resulting in 5 physical labels per mouse.</p>
 
 <h4>Custom Labels</h4>
 <p>Click <strong>Custom Labels</strong> to define your own set of sample names:</p>
 <ol>
-  <li>Type a sample name in the text field and click <strong>+ Add</strong> (or press Enter).</li>
+  <li>Type a sample name in the text field and click <strong>+ Add</strong> (or press Enter). A character counter shows when you're near or over the 13-character limit.</li>
   <li>Click <strong>+ Blank</strong> to add a label with just the AS number and date (no sample name).</li>
-  <li>Labels appear as chips above the input. Click the <strong>×</strong> on any chip to remove it.</li>
+  <li>Click <strong>Load Standard Template</strong> to pre-fill with the standard harvest labels — useful when you only need to change a few.</li>
+  <li><strong>Click</strong> any label name to edit it in place. Press Enter to confirm, or Escape to cancel.</li>
+  <li><strong>Drag</strong> labels to reorder them — grab any label chip and drop it in a new position.</li>
+  <li>Click the <strong>×</strong> on any chip to remove it.</li>
   <li>Click <strong>Clear</strong> to remove all custom labels.</li>
 </ol>
-<div class="card">If a label name exceeds ~18 characters, a warning will appear — text longer than this may not fit within the column width on the physical label.</div>
 
 <h3>Step 3: Generate &amp; Print</h3>
 <ol>
@@ -229,17 +135,19 @@
 
 <h3>Step 1: Create Labels</h3>
 <ul>
-  <li><strong>Date</strong> — Shared across all labels. Prints on the third line of every label.</li>
+  <li><strong>Date</strong> — Shared across all labels. Prints on the third line of every label (unless unchecked).</li>
   <li><strong>Project Name</strong> — Optional. Included in the downloaded filename.</li>
+  <li><strong>Include date on labels</strong> — Checked by default. Uncheck to omit the date line.</li>
+  <li><strong>Print project name on labels (4th line)</strong> — When checked, the project name prints on every label.</li>
 </ul>
 <p>Each row in the table defines one label:</p>
 <ul>
-  <li><strong>Line 1 (top)</strong> — Any text for the first line (e.g., an AS number, a sample ID, a name).</li>
-  <li><strong>Line 2 (middle)</strong> — Any text for the second line (e.g., a sample type, a description).</li>
+  <li><strong>Line 1 (top)</strong> — Any text for the first line (e.g., an AS number, a sample ID, or a name).</li>
+  <li><strong>Line 2 (middle)</strong> — Any text for the second line (e.g., a sample type, or a description).</li>
   <li><strong>Qty</strong> — Number of copies of this label to print. Defaults to 1.</li>
 </ul>
+<div class="card">A character counter appears on each text field as you approach or exceed the 13-character limit. Text that exceeds this limit will be highlighted and may not fit on the physical label.</div>
 <p>Click <strong>+ Add Row</strong> to add more labels. Click the <strong>×</strong> button on any row to remove it. Click <strong>Clear All</strong> to start over.</p>
-<div class="card">A character counter appears as you approach the ~18 character limit per line. Text that exceeds this limit will be highlighted and may not fit on the physical label.</div>
 
 <h3>Step 2: Generate &amp; Print</h3>
 <p>Same as Harvest Labels — click <strong>Generate Labels</strong>, then use <strong>Print to Zebra</strong> or <strong>Download .txt</strong>.</p>
@@ -251,7 +159,19 @@
 <ul>
   <li>Labels shown in <strong style="color:#9b2c2c">red text</strong> in the preview have text that may be too long to fit.</li>
   <li>Blank label slots appear as empty space between the top line and date.</li>
+  <li>When the project name is printed on labels, it appears as a gold-colored 4th line in the preview.</li>
 </ul>
+
+<hr>
+
+<h2>Character Limits</h2>
+<p>Each label column is approximately 200 dots wide. Using Zebra Font D, this accommodates roughly <strong>13 characters</strong> comfortably. Character counters appear on all text inputs:</p>
+<ul>
+  <li>The counter turns <strong>amber</strong> as you approach the limit.</li>
+  <li>The counter turns <strong>red</strong> with a "may not fit" warning when you exceed it.</li>
+  <li>Labels that exceed the limit are highlighted in red in the preview.</li>
+</ul>
+<p>You can still generate and print labels with longer text, but the text may be clipped on the physical label.</p>
 
 <hr>
 
@@ -286,7 +206,7 @@
   <thead><tr><th>Problem</th><th>Solution</th></tr></thead>
   <tbody>
     <tr><td>Labels print as plain text instead of formatted labels</td><td>Make sure you selected the Zebra printer (not a paper printer) in the print dialog. The Zebra interprets the ZPL commands directly.</td></tr>
-    <tr><td>Text is cut off on the right side of a label</td><td>The label text is too long. Shorten it to 18 characters or fewer.</td></tr>
+    <tr><td>Text is cut off on the right side of a label</td><td>The label text is too long. Shorten it to 13 characters or fewer.</td></tr>
     <tr><td>Browser print dialog doesn't show the Zebra printer</td><td>The printer may not be installed. See Printer Setup above.</td></tr>
     <tr><td>Nothing prints</td><td>Check that the Zebra printer is powered on, connected, and has labels loaded.</td></tr>
     <tr><td>Labels are misaligned</td><td>Check that the correct label size is configured in the Zebra printer driver settings.</td></tr>
