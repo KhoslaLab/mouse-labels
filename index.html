@@ -282,7 +282,7 @@
     </div>
 
     <div id="standardInfo" class="info-box" style="margin-top:0">
-      Uses the standard harvest template: <strong>Plasma ×3</strong>, <strong>LFemur+L4-6</strong>, <strong>LTibia+L1-3</strong>, <strong>RFem+RTib</strong>, <strong>Met</strong>, <strong>Dia</strong>, <strong>Vert</strong>, <strong>Met</strong>, <strong>Dia</strong>, <strong>Vert</strong>, <strong>Met/Dia</strong>, <strong>Vert</strong>, <strong>Ear/tail</strong> — 15 labels per mouse, printed 3-across on 5 physical labels.
+      Uses the standard harvest template: <strong>Plasma ×3</strong>, <strong>LFemur+L4-6</strong>, <strong>LTibia+L1-3</strong>, <strong>RFem+RTib</strong>, <strong>Met</strong>, <strong>Dia</strong>, <strong>Vert</strong>, <strong>Met</strong>, <strong>Dia</strong>, <strong>Vert</strong>, <strong>Met/Dia</strong>, <strong>Vert</strong>, <strong>Ear/tail</strong> — 15 labels per mouse, printed 3-across on 5 physical labels. <a href="USAGE.html#standard-template" target="_blank" style="color:var(--accent)">What are these labels for?</a>
     </div>
 
     <div id="customSection" class="hidden">
@@ -461,8 +461,10 @@
   let dragSrcIndex = null;
 
   /* ======== Init ======== */
-  document.getElementById('labelDate').valueAsDate = new Date();
-  document.getElementById('manualDate').valueAsDate = new Date();
+  const today = new Date();
+  const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+  document.getElementById('labelDate').value = todayStr;
+  document.getElementById('manualDate').value = todayStr;
   addManualRow(); addManualRow(); addManualRow();
 
   /* ======== Page navigation ======== */
