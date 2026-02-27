@@ -282,7 +282,7 @@
     </div>
 
     <div id="standardInfo" class="info-box" style="margin-top:0">
-      Uses the standard harvest template: <strong>Plasma ×3</strong>, <strong>LFemur+L4-6</strong>, <strong>LTibia+L1-3</strong>, <strong>RFem+RTib</strong>, <strong>Met</strong>, <strong>Dia</strong>, <strong>Vert</strong>, <strong>Met</strong>, <strong>Dia</strong>, <strong>Vert</strong>, <strong>Met/Dia</strong>, <strong>Vert</strong> — 14 labels per mouse, printed 3-across on 5 physical labels (15th slot blank).
+      Uses the standard harvest template: <strong>Plasma ×3</strong>, <strong>LFemur+L4-6</strong>, <strong>LTibia+L1-3</strong>, <strong>RFem+RTib</strong>, <strong>Met</strong>, <strong>Dia</strong>, <strong>Vert</strong>, <strong>Met</strong>, <strong>Dia</strong>, <strong>Vert</strong>, <strong>Met/Dia</strong>, <strong>Vert</strong>, <strong>Ear/tail</strong> — 15 labels per mouse, printed 3-across on 5 physical labels.
     </div>
 
     <div id="customSection" class="hidden">
@@ -346,18 +346,18 @@
 <!-- ============================================================ -->
 <div id="page-manual" class="page">
 
+  <div class="import-bar" id="manualImportBar">
+    <div class="import-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+    </div>
+    <div class="import-text">
+      <strong>Import from file</strong> — Drop a .txt label file here, or click to browse. Harvest-compatible files open in Harvest Labels.
+    </div>
+    <button class="btn btn-sm btn-outline" onclick="document.getElementById('fileInput').click()" style="flex-shrink:0">Choose File…</button>
+  </div>
+
   <div class="card">
     <div class="card-title"><span class="step">1</span> Create Labels</div>
-
-    <div class="import-bar" id="manualImportBar">
-      <div class="import-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-      </div>
-      <div class="import-text">
-        <strong>Import from file</strong> — Drop a .txt label file here, or click to browse. Harvest-compatible files open in Harvest Labels.
-      </div>
-      <button class="btn btn-sm btn-outline" onclick="document.getElementById('fileInput').click()" style="flex-shrink:0">Choose File…</button>
-    </div>
 
     <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px">
       Enter any text for Line 1 and Line 2 of each label. Date is shared across all labels. Set Qty to print multiples of the same label. Labels are grouped 3-across per physical label.
@@ -451,7 +451,7 @@
     'LFemur+L4-6', 'LTibia+L1-3', 'RFem+RTib',
     'Met', 'Dia', 'Vert',
     'Met', 'Dia', 'Vert',
-    'Met/Dia', 'Vert', ''
+    'Met/Dia', 'Vert', 'Ear/tail'
   ];
 
   let customLabels = [];

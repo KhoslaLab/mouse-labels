@@ -7,7 +7,7 @@ Open the app in your browser. There are two modes, accessible via the tabs at th
 - **Harvest Labels** — For generating standard mouse sample labels by AS number range.
 - **Manual Labels** — For creating labels with arbitrary text on each line.
 
-Both pages include an **Import from file** bar for loading previously downloaded label files. You can drag and drop a `.txt` file onto either bar, or click to browse.
+Both pages include an **Import from file** bar at the top for loading previously downloaded label files. You can drag and drop a `.txt` file onto either bar, or click to browse.
 
 ---
 
@@ -17,7 +17,7 @@ You can re-import any `.txt` file previously downloaded from this app to edit an
 
 ### How to import
 
-1. **Drag and drop** a `.txt` or `.zpl` file onto the import bar on either the Harvest Labels or Manual Labels page, **or** click the import bar (or the "Choose File…" button) to browse for a file.
+1. **Drag and drop** a `.txt` or `.zpl` file onto the import bar at the top of either page, **or** click the import bar (or the "Choose File…" button) to browse for a file.
 2. The app will parse the ZPL in the file and automatically route it to the appropriate page.
 
 ### Smart routing
@@ -50,23 +50,23 @@ Choose one of two options:
 
 #### Standard Harvest Template
 
-Click **Standard Harvest Template** (selected by default). This uses the predefined set of 14 sample labels per mouse:
+Click **Standard Harvest Template** (selected by default). This uses the predefined set of 15 sample labels per mouse:
 
-| Label # | Sample Name   |
-|---------|---------------|
-| 1–3     | Plasma        |
-| 4       | LFemur+L4-6   |
-| 5       | LTibia+L1-3   |
-| 6       | RFem+RTib      |
-| 7       | Met            |
-| 8       | Dia            |
-| 9       | Vert           |
-| 10      | Met            |
-| 11      | Dia            |
-| 12      | Vert           |
-| 13      | Met/Dia        |
-| 14      | Vert           |
-| 15      | (blank)        |
+| Label # | Sample Name   | Purpose |
+|---------|---------------|---------|
+| 1–3     | Plasma        | Plasma storage tubes |
+| 4       | LFemur+L4-6   | Left femur + lumbar vertebrae 4–6, for microCT/plastic embedding |
+| 5       | LTibia+L1-3   | Left tibia + lumbar vertebrae 1–3, for paraffin embedding |
+| 6       | RFem+RTib      | Right femur + right tibia, for met/dia RNA |
+| 7       | Met            | Metaphysis — 50 mL tube, homogenize in Trizol for RNA |
+| 8       | Dia            | Diaphysis — 50 mL tube, homogenize in Trizol for RNA |
+| 9       | Vert           | Thoracic vertebrae — 50 mL tube, homogenize in Trizol for RNA |
+| 10      | Met            | Metaphysis — 1.5 mL tube for RNA |
+| 11      | Dia            | Diaphysis — 1.5 mL tube for RNA |
+| 12      | Vert           | Thoracic vertebrae — 1.5 mL tube for RNA |
+| 13      | Met/Dia        | Metaphysis/diaphysis — tube to spin out marrow |
+| 14      | Vert           | Thoracic vertebrae — tube to spin out marrow |
+| 15      | Ear/tail       | Ear or tail cut for confirmatory genotyping |
 
 These are printed 3-across, resulting in 5 physical labels per mouse.
 
