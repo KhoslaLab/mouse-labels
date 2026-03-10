@@ -14,6 +14,7 @@ This tool replaces a manual Excel-based workflow for printing mouse sample label
 - **Custom Labels with Drag-and-Drop** — Reorder custom labels by dragging chips, and click any label name to edit it in place.
 - **Load Standard Template** — Pre-fill the custom label editor with standard harvest labels so you can make small modifications without starting from scratch.
 - **Project Name** — Optional project name included in downloaded filenames and optionally printed as a 4th line on every label.
+- **Cap Labels (Tube Caps)** — Optionally print on the 4 small circles in the first square of each physical label, for tube cap identification. Per-sample control with editable 4-character abbreviations. Includes a calibration test print button.
 - **Date Toggle** — Include or exclude the date from labels with a single checkbox.
 - **Print or Download** — Print directly to a Zebra printer via the browser print dialog, or download a `.txt` file to print from Notepad.
 - **Length Warnings** — Live character counters on all text inputs warn when text exceeds the ~13 character column width of the ZPL layout.
@@ -46,7 +47,20 @@ Each physical label prints three columns at ZPL field positions x=240, x=440, an
 | 3    | y=80      | Date (optional)          |
 | 4    | y=110     | Project name (optional)  |
 
-The ZPL uses `^AD` (Font D) and `^CFD` (default font D). The base 3-line format is compatible with the existing Excel-based label workflow and produces byte-identical output for the standard harvest template.
+The ZPL uses `^AD` (Font D) and `^CFD` (default font D) for the rectangular label columns. The base 3-line format is compatible with the existing Excel-based label workflow and produces byte-identical output for the standard harvest template.
+
+### Cap Label Circles
+
+When cap labels are enabled, the first square on each physical label contains a 2×2 grid of small circles for tube cap identification. These use `^A0N,20,16` (Font 0, 20 high, 16 wide) and are positioned at:
+
+| Circle | Position | Content |
+|--------|----------|---------|
+| Top-left | x=38, y=42/64 | AS digits + sample 1 abbreviation |
+| Top-right | x=130, y=42/64 | AS digits + sample 2 abbreviation |
+| Bottom-left | x=38, y=136/158 | AS digits + sample 3 abbreviation |
+| Bottom-right | x=130, y=136/158 | AS digits only |
+
+These positions are calibrated for a specific label stock. Adjust the `CAP_POS` constant in the source code if using different labels.
 
 ## License
 

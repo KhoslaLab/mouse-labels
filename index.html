@@ -164,6 +164,28 @@
   .checkboxes-group { display: flex; flex-direction: column; gap: 4px; margin-top: 12px; }
   .checkboxes-group .checkbox-row { margin-top: 0; }
 
+  /* ---- Cap label config ---- */
+  .cap-config { margin-top: 16px; }
+  .cap-config-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 6px; margin-top: 10px; }
+  .cap-item { display: flex; align-items: center; gap: 6px; padding: 6px 10px; background: var(--surface-alt); border: 1px solid var(--border); border-radius: var(--radius); font-size: 13px; }
+  .cap-item input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer; flex-shrink: 0; }
+  .cap-item .cap-sample-name { flex: 1; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  .cap-item .cap-abbrev-input { width: 56px; padding: 3px 6px; border: 1px solid var(--border); border-radius: 4px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; text-align: center; background: white; flex-shrink: 0; }
+  .cap-item .cap-abbrev-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-light); }
+  .cap-item.disabled { opacity: 0.4; }
+  .cap-master-row { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: var(--accent-light); border: 1px solid var(--tag-border); border-radius: var(--radius); margin-top: 12px; }
+  .cap-master-row input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; flex-shrink: 0; }
+  .cap-master-row label { font-size: 14px; font-weight: 600; color: var(--accent); cursor: pointer; margin: 0; }
+  .cap-master-row .cap-hint { font-size: 12px; color: var(--text-muted); font-weight: 400; margin-left: auto; }
+  .cap-select-btns { display: flex; gap: 8px; margin-top: 8px; }
+  .cap-select-btns button { font-size: 12px; padding: 3px 10px; }
+  .cap-preview-circles { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; width: 80px; }
+  .cap-preview-dot { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'IBM Plex Mono', monospace; font-size: 8px; line-height: 1.2; color: var(--text-muted); background: var(--surface-alt); }
+  .cap-preview-dot.active { border-color: var(--accent); background: var(--accent-light); color: var(--accent); }
+  .label-preview .cap-circles { display: flex; gap: 4px; margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--border); }
+  .label-preview .cap-circle { width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'IBM Plex Mono', monospace; font-size: 7px; line-height: 1.1; color: var(--text-muted); background: white; flex-shrink: 0; }
+  .label-preview .cap-circle.active { border-color: var(--accent); color: var(--accent); }
+
   .hidden { display: none !important; }
   #printFrame { display: none; }
   #fileInput { display: none; }
@@ -282,7 +304,7 @@
     </div>
 
     <div id="standardInfo" class="info-box" style="margin-top:0">
-      Uses the standard harvest template: <strong>Plasma ×3</strong>, <strong>LFemur+L4-6</strong>, <strong>LTibia+L1-3</strong>, <strong>RFem+RTib</strong>, <strong>Met</strong>, <strong>Dia</strong>, <strong>Vert</strong>, <strong>Met</strong>, <strong>Dia</strong>, <strong>Vert</strong>, <strong>Met/Dia</strong>, <strong>Vert</strong>, <strong>Ear/tail</strong> — 15 labels per mouse, printed 3-across on 5 physical labels. <a href="USAGE.html#standard-template" target="_blank" style="color:var(--accent)">What are these labels for?</a>
+      Uses the standard harvest template: <strong>Plasma ×3</strong>, <strong>LFemur+L4-6</strong>, <strong>LTibia+L1-3</strong>, <strong>RFem+RTib</strong>, <strong>Met</strong>, <strong>Dia</strong>, <strong>Vert</strong>, <strong>Met</strong>, <strong>Dia</strong>, <strong>Vert</strong>, <strong>Met/Dia</strong>, <strong>Vert</strong>, <strong>Ear/tail</strong> — 15 labels per mouse, printed 3-across on 5 physical labels. <a href="USAGE.html#standard-template" target="_blank" style="color:var(--accent)">What are these standard labels used for?</a>
     </div>
 
     <div id="customSection" class="hidden">
@@ -304,6 +326,26 @@
         Add individual sample labels. Use <strong>+ Blank</strong> for a label with just the AS number and date. Labels are grouped 3 per physical label. Click a label name to edit it. Drag labels to reorder.
       </div>
     </div>
+
+    <div class="cap-master-row" style="margin-top:16px">
+      <input type="checkbox" id="enableCapLabels" onchange="toggleCapConfig()">
+      <label for="enableCapLabels">Print cap labels (tube caps)</label>
+      <span class="cap-hint">2×2 circles in first square</span>
+    </div>
+    <div id="capConfigSection" class="cap-config hidden">
+      <div style="font-size:13px;color:var(--text-muted);margin-bottom:4px">
+        Each physical label has 4 small circles in the first square, arranged in a 2×2 grid. Select which samples get cap labels below. Each cap prints the AS number (digits only) and a 4-character abbreviation. Circles 1–3 correspond to the three label columns; circle 4 always prints the AS number only.
+      </div>
+      <div class="cap-select-btns">
+        <button class="btn btn-sm btn-outline" onclick="selectAllCaps(true)">Select All</button>
+        <button class="btn btn-sm btn-outline" onclick="selectAllCaps(false)">Deselect All</button>
+        <button class="btn btn-sm btn-outline" onclick="printCapTestLabel()" style="margin-left:auto" title="Print a single calibration label with all 4 circles filled">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg>
+          Print Cap Test Label
+        </button>
+      </div>
+      <div class="cap-config-grid" id="capConfigGrid"></div>
+    </div>
   </div>
 
   <div class="card">
@@ -324,7 +366,7 @@
     </div>
     <div class="info-box" style="margin-top:12px">
       <strong>Print to Zebra</strong> opens the browser print dialog — select your Zebra printer and print.<br>
-      <strong>Download .txt</strong> saves a text file you can open in Notepad and print via File → Print.
+      <strong>Download .txt</strong> saves a text file you can open in Notepad and print via File → Print. This file can be re-uploaded to update and reprint later.
     </div>
     <div id="harvestStatus" class="status-bar"></div>
     <div class="preview-section" id="harvestPreview" style="display:none">
@@ -375,7 +417,7 @@
       </div>
       <div></div>
     </div>
-    <div class="checkboxes-group" style="margin-top:0;margin-bottom:20px">
+    <div class="checkboxes-group" style="margin-top:0;margin-bottom:12px">
       <div class="checkbox-row">
         <input type="checkbox" id="manualIncludeDateOnLabel" checked>
         <label for="manualIncludeDateOnLabel">Include date on labels</label>
@@ -386,12 +428,24 @@
       </div>
     </div>
 
+    <div class="cap-master-row" style="margin-bottom:8px">
+      <input type="checkbox" id="manualEnableCapLabels" onchange="toggleManualCapConfig()">
+      <label for="manualEnableCapLabels">Print cap labels (tube caps)</label>
+      <span class="cap-hint">2×2 circles in first square</span>
+    </div>
+    <div class="info-box" style="margin-top:0;margin-bottom:20px">
+      When enabled, <strong>Cap</strong>, <strong>Cap ID</strong>, and <strong>Abbrev</strong> columns appear in the table below. Check <strong>Cap</strong> for any row that needs a tube cap label. <strong>Cap ID</strong> (up to 4 characters, auto-filled from Line 1) is printed as the top line on each cap circle. <strong>Abbrev</strong> (up to 4 characters, auto-filled from Line 2) is printed as the bottom line. On each physical label, circles 1–3 correspond to the three label columns; circle 4 prints only the first column’s Cap ID.
+    </div>
+
     <table class="manual-entries">
       <thead>
         <tr>
           <th style="width:30px">#</th>
           <th>Line 1 (top)</th>
           <th>Line 2 (middle)</th>
+          <th class="manual-cap-col hidden" style="width:50px">Cap</th>
+          <th class="manual-cap-col hidden" style="width:70px">Cap ID</th>
+          <th class="manual-cap-col hidden" style="width:70px">Abbrev</th>
           <th style="width:70px">Qty</th>
           <th style="width:40px"></th>
         </tr>
@@ -453,6 +507,25 @@
     'Met', 'Dia', 'Vert',
     'Met/Dia', 'Vert', 'Ear/tail'
   ];
+
+  /* Cap label circle positions (2x2 grid in first square) */
+  const CAP_MAX_CHARS = 4;
+  const CAP_FONT = '^A0N,20,16';
+  const CAP_POS = [
+    { x: 38, y1: 42, y2: 64 },    // Top-left:     sample 1 cap
+    { x: 130, y1: 42, y2: 64 },   // Top-right:    sample 2 cap
+    { x: 38, y1: 136, y2: 158 },  // Bottom-left:  sample 3 cap
+    { x: 130, y1: 136, y2: 158 }  // Bottom-right: AS number only (4th circle)
+  ];
+
+  /* Default cap abbreviations for standard template */
+  function makeCapAbbrev(name) { return name.substring(0, CAP_MAX_CHARS); }
+
+  /* Cap settings: parallel arrays for harvest labels */
+  let standardCapEnabled = STANDARD_LABELS.map(() => false);
+  let standardCapAbbrevs = STANDARD_LABELS.map(n => makeCapAbbrev(n));
+  let customCapEnabled = [];
+  let customCapAbbrevs = [];
 
   let customLabels = [];
   let harvestMode = 'standard';
@@ -518,6 +591,92 @@
     document.getElementById('btnCustom').classList.toggle('active', m === 'custom');
     document.getElementById('standardInfo').classList.toggle('hidden', m !== 'standard');
     document.getElementById('customSection').classList.toggle('hidden', m !== 'custom');
+    renderCapConfig();
+  }
+
+  /* ======== Cap label configuration ======== */
+  function toggleCapConfig() {
+    const enabled = document.getElementById('enableCapLabels').checked;
+    document.getElementById('capConfigSection').classList.toggle('hidden', !enabled);
+    if (enabled) renderCapConfig();
+  }
+
+  function toggleManualCapConfig() {
+    const enabled = document.getElementById('manualEnableCapLabels').checked;
+    document.querySelectorAll('.manual-cap-col').forEach(el => el.classList.toggle('hidden', !enabled));
+  }
+
+  function getActiveLabels() {
+    return harvestMode === 'standard' ? STANDARD_LABELS : customLabels;
+  }
+  function getActiveCapEnabled() {
+    return harvestMode === 'standard' ? standardCapEnabled : customCapEnabled;
+  }
+  function getActiveCapAbbrevs() {
+    return harvestMode === 'standard' ? standardCapAbbrevs : customCapAbbrevs;
+  }
+
+  function renderCapConfig() {
+    const grid = document.getElementById('capConfigGrid');
+    const labels = getActiveLabels();
+    const capEn = getActiveCapEnabled();
+    const capAb = getActiveCapAbbrevs();
+
+    grid.innerHTML = labels.map((name, i) => {
+      const displayName = name || '(blank)';
+      const checked = capEn[i] ? 'checked' : '';
+      const abbrev = escAttr(capAb[i] || '');
+      return `<div class="cap-item">
+        <input type="checkbox" ${checked} onchange="setCapEnabled(${i}, this.checked)">
+        <span class="cap-sample-name" title="${escAttr(name)}">${escHtml(displayName)}</span>
+        <input type="text" class="cap-abbrev-input" value="${abbrev}" maxlength="${CAP_MAX_CHARS}"
+          placeholder="abbr" onchange="setCapAbbrev(${i}, this.value)">
+      </div>`;
+    }).join('');
+  }
+
+  function setCapEnabled(i, val) {
+    if (harvestMode === 'standard') standardCapEnabled[i] = val;
+    else customCapEnabled[i] = val;
+  }
+
+  function setCapAbbrev(i, val) {
+    if (harvestMode === 'standard') standardCapAbbrevs[i] = val.substring(0, CAP_MAX_CHARS);
+    else customCapAbbrevs[i] = val.substring(0, CAP_MAX_CHARS);
+  }
+
+  function selectAllCaps(val) {
+    const arr = getActiveCapEnabled();
+    for (let i = 0; i < arr.length; i++) arr[i] = val;
+    renderCapConfig();
+  }
+
+  /**
+   * Print a single calibration label with all 4 cap circles filled
+   * plus position markers so you can adjust CAP_POS.
+   */
+  function printCapTestLabel() {
+    let zpl = '^XA^CFD';
+
+    // Rectangular sections: print reference text
+    zpl += `^FO${X_POS[0]},20^AD^FDCAP TEST`;
+    zpl += `^FS^FO${X_POS[1]},20^AD^FDCAP TEST`;
+    zpl += `^FS^FO${X_POS[2]},20^AD^FDCAP TEST`;
+
+    // All 4 cap circles with identifiable text
+    const testLabels = ['TL-1', 'TR-2', 'BL-3', 'BR-4'];
+    for (let c = 0; c < 4; c++) {
+      zpl += `^FS^FO${CAP_POS[c].x},${CAP_POS[c].y1}${CAP_FONT}^FD1234`;
+      zpl += `^FS^FO${CAP_POS[c].x},${CAP_POS[c].y2}${CAP_FONT}^FD${testLabels[c]}`;
+    }
+
+    zpl += '^FS^XZ';
+
+    currentZPL = zpl;
+    document.getElementById('printContent').textContent = zpl;
+    window.print();
+
+    showHarvestStatus('Printed cap test label. Circles show 1234 + position (TL=top-left, TR=top-right, BL=bottom-left, BR=bottom-right). Adjust CAP_POS based on alignment.', 'success');
   }
 
   /* ======== Harvest: custom label management ======== */
@@ -526,19 +685,46 @@
     const val = input.value.trim();
     if (!val) return;
     customLabels.push(val);
+    customCapEnabled.push(false);
+    customCapAbbrevs.push(makeCapAbbrev(val));
     input.value = '';
     updateCharCounter(input, 'newLabelCounter');
     renderChips();
+    if (document.getElementById('enableCapLabels').checked) renderCapConfig();
     input.focus();
   }
 
-  function addBlankLabel() { customLabels.push(''); renderChips(); }
+  function addBlankLabel() {
+    customLabels.push('');
+    customCapEnabled.push(false);
+    customCapAbbrevs.push('');
+    renderChips();
+    if (document.getElementById('enableCapLabels').checked) renderCapConfig();
+  }
 
-  function removeCustomLabel(i) { customLabels.splice(i, 1); renderChips(); }
+  function removeCustomLabel(i) {
+    customLabels.splice(i, 1);
+    customCapEnabled.splice(i, 1);
+    customCapAbbrevs.splice(i, 1);
+    renderChips();
+    if (document.getElementById('enableCapLabels').checked) renderCapConfig();
+  }
 
-  function clearCustomLabels() { customLabels = []; renderChips(); }
+  function clearCustomLabels() {
+    customLabels = [];
+    customCapEnabled = [];
+    customCapAbbrevs = [];
+    renderChips();
+    if (document.getElementById('enableCapLabels').checked) renderCapConfig();
+  }
 
-  function loadStandardToCustom() { customLabels = [...STANDARD_LABELS]; renderChips(); }
+  function loadStandardToCustom() {
+    customLabels = [...STANDARD_LABELS];
+    customCapEnabled = [...standardCapEnabled];
+    customCapAbbrevs = [...standardCapAbbrevs];
+    renderChips();
+    if (document.getElementById('enableCapLabels').checked) renderCapConfig();
+  }
 
   /* ======== Chip rendering with drag-drop & click-to-edit ======== */
   function renderChips() {
@@ -590,7 +776,12 @@
         if (dragSrcIndex !== null && dragSrcIndex !== targetIndex) {
           const item = customLabels.splice(dragSrcIndex, 1)[0];
           customLabels.splice(targetIndex, 0, item);
+          const capEn = customCapEnabled.splice(dragSrcIndex, 1)[0];
+          customCapEnabled.splice(targetIndex, 0, capEn);
+          const capAb = customCapAbbrevs.splice(dragSrcIndex, 1)[0];
+          customCapAbbrevs.splice(targetIndex, 0, capAb);
           renderChips();
+          if (document.getElementById('enableCapLabels').checked) renderCapConfig();
         }
       });
 
@@ -608,8 +799,12 @@
 
     function commitEdit() {
       const newVal = input.value.trim();
+      const oldAbbrev = customCapAbbrevs[index];
+      const wasAutoAbbrev = oldAbbrev === makeCapAbbrev(customLabels[index]);
       customLabels[index] = newVal;
+      if (wasAutoAbbrev) customCapAbbrevs[index] = makeCapAbbrev(newVal);
       renderChips();
+      if (document.getElementById('enableCapLabels').checked) renderCapConfig();
     }
 
     input.addEventListener('blur', commitEdit);
@@ -624,21 +819,28 @@
   }
 
   /* ======== Manual: row management ======== */
-  function addManualRow(line1, line2, qty) {
+  function addManualRow(line1, line2, qty, capOn, capId, capAbbr) {
     const id = manualRowId++;
     const tbody = document.getElementById('manualTableBody');
     const tr = document.createElement('tr');
     tr.id = `mrow-${id}`;
+    const capHidden = document.getElementById('manualEnableCapLabels').checked ? '' : 'hidden';
+    const capChecked = capOn ? 'checked' : '';
+    const defaultId = capId || makeCapAbbrev(line1 || '');
+    const defaultAbbr = capAbbr || makeCapAbbrev(line2 || '');
     tr.innerHTML = `
       <td class="row-num">${tbody.children.length + 1}</td>
       <td class="form-group">
-        <input type="text" class="m-line1" value="${escAttr(line1 || '')}" placeholder="e.g. AS2243" oninput="checkManualLen(this)">
+        <input type="text" class="m-line1" value="${escAttr(line1 || '')}" placeholder="e.g. AS2243" oninput="checkManualLen(this); syncManualCapId(this)">
         <div class="char-counter"></div>
       </td>
       <td class="form-group">
-        <input type="text" class="m-line2" value="${escAttr(line2 || '')}" placeholder="e.g. Plasma" oninput="checkManualLen(this)">
+        <input type="text" class="m-line2" value="${escAttr(line2 || '')}" placeholder="e.g. Plasma" oninput="checkManualLen(this); syncManualCapAbbr(this)">
         <div class="char-counter"></div>
       </td>
+      <td class="manual-cap-col ${capHidden}" style="text-align:center"><input type="checkbox" class="m-cap" ${capChecked} style="width:16px;height:16px;accent-color:var(--accent)"></td>
+      <td class="manual-cap-col ${capHidden}"><input type="text" class="m-cap-id" value="${escAttr(defaultId)}" maxlength="${CAP_MAX_CHARS}" style="width:60px;padding:8px 6px;font-family:IBM Plex Mono,monospace;font-size:13px;text-align:center;border:1px solid var(--border);border-radius:4px"></td>
+      <td class="manual-cap-col ${capHidden}"><input type="text" class="m-cap-abbr" value="${escAttr(defaultAbbr)}" maxlength="${CAP_MAX_CHARS}" style="width:60px;padding:8px 6px;font-family:IBM Plex Mono,monospace;font-size:13px;text-align:center;border:1px solid var(--border);border-radius:4px"></td>
       <td><input type="number" class="m-qty qty-input" value="${qty || 1}" min="1" max="999"></td>
       <td class="col-actions"><button class="remove-row-btn" onclick="removeManualRow(${id})" title="Remove row">×</button></td>`;
     tbody.appendChild(tr);
@@ -648,6 +850,30 @@
   function removeManualRow(id) { const r = document.getElementById(`mrow-${id}`); if (r) r.remove(); renumberManualRows(); }
   function clearManualRows() { document.getElementById('manualTableBody').innerHTML = ''; manualRowId = 0; addManualRow(); }
   function renumberManualRows() { document.querySelectorAll('#manualTableBody tr').forEach((tr, i) => { tr.querySelector('.row-num').textContent = i + 1; }); }
+
+  /* Auto-sync cap ID when Line 1 changes (only if user hasn't manually edited it) */
+  function syncManualCapId(input) {
+    const tr = input.closest('tr');
+    const capIdEl = tr.querySelector('.m-cap-id');
+    if (!capIdEl) return;
+    const oldDefault = makeCapAbbrev(capIdEl.dataset.syncFrom || '');
+    if (capIdEl.value === oldDefault || capIdEl.value === '') {
+      capIdEl.value = makeCapAbbrev(input.value);
+    }
+    capIdEl.dataset.syncFrom = input.value;
+  }
+
+  /* Auto-sync cap abbreviation when Line 2 changes */
+  function syncManualCapAbbr(input) {
+    const tr = input.closest('tr');
+    const capAbEl = tr.querySelector('.m-cap-abbr');
+    if (!capAbEl) return;
+    const oldDefault = makeCapAbbrev(capAbEl.dataset.syncFrom || '');
+    if (capAbEl.value === oldDefault || capAbEl.value === '') {
+      capAbEl.value = makeCapAbbrev(input.value);
+    }
+    capAbEl.dataset.syncFrom = input.value;
+  }
 
   /* ======== Shared utilities ======== */
   function escHtml(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
@@ -679,7 +905,7 @@
     const proj = projectName || '';
     for (let i = 0; i < entries.length; i += 3) {
       const group = entries.slice(i, i + 3);
-      while (group.length < 3) group.push({ line1: '', line2: '' });
+      while (group.length < 3) group.push({ line1: '', line2: '', capEnabled: false, capId: '', capAbbrev: '' });
 
       let zpl = `^XA^CFD^FO${X_POS[0]},20^AD^FD${group[0].line1}`;
       zpl += `^FS^FO${X_POS[1]},20^AD^FD${group[1].line1}`;
@@ -695,6 +921,24 @@
         zpl += `^FS^FO${X_POS[1]},110^AD^FD${proj}`;
         zpl += `^FS^FO${X_POS[2]},110^AD^FD${proj}`;
       }
+
+      /* Cap label circles (2x2 in first square) */
+      const anyCap = group.some(g => g.capEnabled);
+      if (anyCap) {
+        for (let c = 0; c < 3; c++) {
+          if (group[c].capEnabled) {
+            const cid = group[c].capId || '';
+            zpl += `^FS^FO${CAP_POS[c].x},${CAP_POS[c].y1}${CAP_FONT}^FD${cid}`;
+            if (group[c].capAbbrev) {
+              zpl += `^FS^FO${CAP_POS[c].x},${CAP_POS[c].y2}${CAP_FONT}^FD${group[c].capAbbrev}`;
+            }
+          }
+        }
+        // 4th circle: uses first entry's capId
+        const fourthId = group[0].capId || '';
+        zpl += `^FS^FO${CAP_POS[3].x},${CAP_POS[3].y1}${CAP_FONT}^FD${fourthId}`;
+      }
+
       zpl += '^FS^XZ';
       blocks.push({ zpl, cells: group, date: dateStr, project: proj });
     }
@@ -718,7 +962,24 @@
           ${dateHtml}${projHtml}
         </div>`;
       }).join('');
-      return `<div class="label-preview"><span class="label-index">#${idx + 1}</span><div class="label-row">${cells}</div></div>`;
+
+      /* Cap label circle preview */
+      const anyCap = b.cells.some(c => c.capEnabled);
+      let capHtml = '';
+      if (anyCap) {
+        const circles = b.cells.map((c, ci) => {
+          if (c.capEnabled) {
+            const cid = c.capId || '';
+            return `<div class="cap-circle active"><div>${escHtml(cid)}</div><div>${escHtml(c.capAbbrev || '')}</div></div>`;
+          }
+          return `<div class="cap-circle"></div>`;
+        }).join('');
+        const fourthId = b.cells[0].capId || '';
+        const fourthCircle = `<div class="cap-circle active"><div>${escHtml(fourthId)}</div></div>`;
+        capHtml = `<div class="cap-circles">${circles}${fourthCircle}</div>`;
+      }
+
+      return `<div class="label-preview"><span class="label-index">#${idx + 1}</span><div class="label-row">${cells}</div>${capHtml}</div>`;
     }).join('');
   }
 
@@ -745,10 +1006,19 @@
     if (sampleNames.length === 0) return showHarvestStatus('Please add at least one sample label.', 'error');
 
     const dateStr = includeDate ? formatDate(dateVal) : '';
+    const capMasterOn = document.getElementById('enableCapLabels').checked;
+    const capEn = getActiveCapEnabled();
+    const capAb = getActiveCapAbbrevs();
     let allEntries = [];
     for (let n = startNum; n <= effectiveEnd; n++) {
       const asId = `AS${n}`;
-      sampleNames.forEach(s => allEntries.push({ line1: asId, line2: s }));
+      sampleNames.forEach((s, si) => allEntries.push({
+        line1: asId,
+        line2: s,
+        capEnabled: capMasterOn && capEn[si],
+        capId: String(n),
+        capAbbrev: capAb[si] || ''
+      }));
     }
 
     const blocks = buildZPL(allEntries, dateStr, projOnLabel ? projName : '');
@@ -788,13 +1058,20 @@
     const rows = document.querySelectorAll('#manualTableBody tr');
     let allEntries = [];
     let hasContent = false;
+    const manualCapMaster = document.getElementById('manualEnableCapLabels').checked;
     rows.forEach(tr => {
       const l1 = tr.querySelector('.m-line1').value;
       const l2 = tr.querySelector('.m-line2').value;
       const qty = parseInt(tr.querySelector('.m-qty').value) || 1;
+      const capChk = tr.querySelector('.m-cap');
+      const capIdEl = tr.querySelector('.m-cap-id');
+      const capAbEl = tr.querySelector('.m-cap-abbr');
+      const capOn = manualCapMaster && capChk && capChk.checked;
+      const capId = capIdEl ? capIdEl.value.substring(0, CAP_MAX_CHARS) : makeCapAbbrev(l1);
+      const capAb = capAbEl ? capAbEl.value.substring(0, CAP_MAX_CHARS) : '';
       if (l1 || l2) {
         hasContent = true;
-        for (let i = 0; i < qty; i++) allEntries.push({ line1: l1, line2: l2 });
+        for (let i = 0; i < qty; i++) allEntries.push({ line1: l1, line2: l2, capEnabled: capOn, capId: capId, capAbbrev: capAb });
       }
     });
     if (!hasContent) return showManualStatus('Please fill in at least one label row.', 'error');
@@ -1063,6 +1340,8 @@
     } else {
       setMode('custom');
       customLabels = [...harvest.sampleLabels];
+      customCapEnabled = harvest.sampleLabels.map(() => false);
+      customCapAbbrevs = harvest.sampleLabels.map(n => makeCapAbbrev(n));
       renderChips();
     }
 

@@ -124,6 +124,21 @@
   <li>Click <strong>Clear</strong> to remove all custom labels.</li>
 </ol>
 
+<h4>Cap Labels (Tube Caps)</h4>
+<p>Each physical label has a first square containing 4 small circles arranged in a 2×2 grid, intended for labeling tube caps. To enable cap labels:</p>
+<ol>
+  <li>Check <strong>Print cap labels (tube caps)</strong> at the bottom of Step 2.</li>
+  <li>A configuration grid appears showing each sample label with a checkbox and a 4-character abbreviation field.</li>
+  <li>Check the samples that need cap labels. Use <strong>Select All</strong> / <strong>Deselect All</strong> for quick toggling.</li>
+  <li>The abbreviation is auto-filled from the first 4 characters of the sample name. Edit it if a different abbreviation is needed.</li>
+</ol>
+<p>When a physical label is printed, the cap circles are filled as follows:</p>
+<ul>
+  <li><strong>Circles 1–3</strong> — Correspond to the three label columns (left, center, right). Each prints the AS number (digits only, without the “AS” prefix) on the first line and the 4-character abbreviation on the second line. A circle is only printed if that sample has cap labels enabled.</li>
+  <li><strong>Circle 4</strong> — Prints the first column’s AS number digits only (no abbreviation). This circle is printed whenever any of the three samples on that physical label has cap labels enabled.</li>
+</ul>
+<div class="card">Use the <strong>Print Cap Test Label</strong> button to print a single calibration label with all 4 circles filled. This is useful for verifying alignment if you change label stock.</div>
+
 <h3>Step 3: Generate &amp; Print</h3>
 <ol>
   <li>Click <strong>Generate Labels</strong> to create the ZPL data and see a preview.</li>
@@ -168,6 +183,15 @@
 <div class="card">A character counter appears on each text field as you approach or exceed the 13-character limit. Text that exceeds this limit will be highlighted and may not fit on the physical label.</div>
 <p>Click <strong>+ Add Row</strong> to add more labels. Click the <strong>×</strong> button on any row to remove it. Click <strong>Clear All</strong> to start over.</p>
 
+<h4>Cap Labels (Tube Caps)</h4>
+<p>Check <strong>Print cap labels (tube caps)</strong> to reveal <strong>Cap</strong>, <strong>Cap ID</strong>, and <strong>Abbrev</strong> columns in the table:</p>
+<ul>
+  <li><strong>Cap</strong> — Check this for any row that needs a tube cap label.</li>
+  <li><strong>Cap ID</strong> — Up to 4 characters, printed as the top line on each cap circle. Auto-filled from the first 4 characters of Line 1; edit if needed. For AS numbers like “AS2243”, you would typically edit this to “2243”.</li>
+  <li><strong>Abbrev</strong> — Up to 4 characters, printed as the bottom line on each cap circle. Auto-filled from the first 4 characters of Line 2; edit if needed.</li>
+</ul>
+<p>On each physical label, circles 1–3 correspond to the three label columns. Circle 4 prints only the first column’s Cap ID. A circle is only printed if that row has <strong>Cap</strong> checked.</p>
+
 <h3>Step 2: Generate &amp; Print</h3>
 <p>Same as Harvest Labels — click <strong>Generate Labels</strong>, then use <strong>Print to Zebra</strong> or <strong>Download .txt</strong>.</p>
 
@@ -179,6 +203,7 @@
   <li>Labels shown in <strong style="color:#9b2c2c">red text</strong> in the preview have text that may be too long to fit.</li>
   <li>Blank label slots appear as empty space between the top line and date.</li>
   <li>When the project name is printed on labels, it appears as a gold-colored 4th line in the preview.</li>
+  <li>When cap labels are enabled, small circles appear below the label preview showing which caps will be printed and their abbreviations.</li>
 </ul>
 
 <hr>
@@ -229,6 +254,7 @@
     <tr><td>Browser print dialog doesn't show the Zebra printer</td><td>The printer may not be installed. See Printer Setup above.</td></tr>
     <tr><td>Nothing prints</td><td>Check that the Zebra printer is powered on, connected, and has labels loaded.</td></tr>
     <tr><td>Labels are misaligned</td><td>Check that the correct label size is configured in the Zebra printer driver settings.</td></tr>
+    <tr><td>Cap label text is misaligned within circles</td><td>Use the <strong>Print Cap Test Label</strong> button in the cap configuration section to print a calibration label. The cap circle positions are tuned for a specific label stock; if you switch to different labels, the positions may need to be adjusted in the source code (the <code>CAP_POS</code> constant).</td></tr>
     <tr><td>Imported file loads into the wrong page</td><td>The app auto-detects harvest patterns (contiguous AS numbers with identical samples per mouse). Files that don't match this pattern load into Manual Labels. You can always manually re-enter labels on either page.</td></tr>
   </tbody>
 </table>

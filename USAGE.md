@@ -82,6 +82,22 @@ Click **Custom Labels** to define your own set of sample names:
 6. Click the **×** on any chip to remove it.
 7. Click **Clear** to remove all custom labels.
 
+#### Cap Labels (Tube Caps)
+
+Each physical label has a first square containing 4 small circles arranged in a 2×2 grid, intended for labeling tube caps. To enable cap labels:
+
+1. Check **Print cap labels (tube caps)** at the bottom of Step 2.
+2. A configuration grid appears showing each sample label with a checkbox and a 4-character abbreviation field.
+3. Check the samples that need cap labels. Use **Select All** / **Deselect All** for quick toggling.
+4. The abbreviation is auto-filled from the first 4 characters of the sample name. Edit it if a different abbreviation is needed.
+
+When a physical label is printed, the cap circles are filled as follows:
+
+- **Circles 1–3** — Correspond to the three label columns (left, center, right). Each prints the AS number (digits only, without the “AS” prefix) on the first line and the 4-character abbreviation on the second line. A circle is only printed if that sample has cap labels enabled.
+- **Circle 4** — Prints the first column’s AS number digits only (no abbreviation). This circle is printed whenever any of the three samples on that physical label has cap labels enabled.
+
+Use the **Print Cap Test Label** button to print a single calibration label with all 4 circles filled. This is useful for verifying alignment if you change label stock.
+
 ### Step 3: Generate & Print
 
 1. Click **Generate Labels** to create the ZPL data and see a preview.
@@ -123,6 +139,16 @@ A character counter appears on each text field as you approach or exceed the 13-
 
 Click **+ Add Row** to add more labels. Click the **×** button on any row to remove it. Click **Clear All** to start over.
 
+#### Cap Labels (Tube Caps)
+
+Check **Print cap labels (tube caps)** to reveal **Cap**, **Cap ID**, and **Abbrev** columns in the table:
+
+- **Cap** — Check this for any row that needs a tube cap label.
+- **Cap ID** — Up to 4 characters, printed as the top line on each cap circle. Auto-filled from the first 4 characters of Line 1; edit if needed. For AS numbers like “AS2243”, you would typically edit this to “2243”.
+- **Abbrev** — Up to 4 characters, printed as the bottom line on each cap circle. Auto-filled from the first 4 characters of Line 2; edit if needed.
+
+On each physical label, circles 1–3 correspond to the three label columns. Circle 4 prints only the first column’s Cap ID. A circle is only printed if that row has **Cap** checked.
+
 ### Step 2: Generate & Print
 
 Same as Harvest Labels — click **Generate Labels**, then use **Print to Zebra** or **Download .txt**.
@@ -136,6 +162,7 @@ After generating, a preview section shows how labels will be grouped on physical
 - Labels shown in **red text** in the preview have text that may be too long to fit.
 - Blank label slots appear as empty space between the top line and date.
 - When the project name is printed on labels, it appears as a gold-colored 4th line in the preview.
+- When cap labels are enabled, small circles appear below the label preview showing which caps will be printed and their abbreviations.
 
 ---
 
@@ -186,4 +213,5 @@ If the printer is not listed, install it using the Zebra printer driver for your
 | Browser print dialog doesn't show the Zebra printer | The printer may not be installed. See Printer Setup above. |
 | Nothing prints | Check that the Zebra printer is powered on, connected, and has labels loaded. |
 | Labels are misaligned | Check that the correct label size is configured in the Zebra printer driver settings. |
+| Cap label text is misaligned within circles | Use the **Print Cap Test Label** button in the cap configuration section to print a calibration label. The cap circle positions are tuned for a specific label stock; if you switch to different labels, the positions may need to be adjusted in the source code (the `CAP_POS` constant). |
 | Imported file loads into the wrong page | The app auto-detects harvest patterns (contiguous AS numbers with identical samples per mouse). Files that don't match this pattern load into Manual Labels. You can always manually re-enter labels on either page. |
